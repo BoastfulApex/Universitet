@@ -9,7 +9,7 @@ from knox.views import LoginView as KnoxLoginView
 from rest_framework.response import Response
 from rest_framework import generics
 
-from .serializers import PhoneVerifySerializer, PhoneAuthTokenSerializer, UserSerializer
+from .serializers import *
 from .models import User
 
 
@@ -64,3 +64,23 @@ class PhoneVerify(generics.CreateAPIView):
                  "data": user.otp,
                  "message": []}
             )
+
+
+class UserDataPostView(generics.CreateAPIView):
+    serializer_class = UserDataSerializer
+    # permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        data = request.data
+        user.passport_seria = data['passport_seria']
+        user.full_name = data['full_name']
+        user.date_if_birth = data['date_if_birth']
+        user.diploma_picture = data['diploma_picture']
+        user.ielts_picture = data['ielts_picture']
+        user.study_type = data['study_type']
+        user.faculty = data['faculty']
+        user.type = data['type']
+        user.type = data['type']
+        user.save()
+        return Response({'status': 'created'})
