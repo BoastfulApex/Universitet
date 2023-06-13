@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from .settings import STATIC_ROOT, STATIC_URL, MEDIA_ROOT, MEDIA_URL
+from django.conf.urls.static import static
 
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
@@ -41,3 +43,6 @@ urlpatterns = [
     path('re_documentation/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 
 ]
+
+urlpatterns += static(STATIC_URL, document_root=STATIC_ROOT)
+urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)
