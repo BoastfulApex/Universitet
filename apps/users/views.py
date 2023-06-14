@@ -42,12 +42,7 @@ class LoginView(KnoxLoginView):
                             request=request, user=request.user)
         data = self.get_post_response_data(request, token, instance)
 
-        return Response(
-            {"status": True,
-             "code": 200,
-             "data": data,
-             "message": []}
-        )
+        return Response(data)
 
 
 class PhoneVerify(generics.CreateAPIView):
@@ -69,7 +64,7 @@ class PhoneVerify(generics.CreateAPIView):
 
 class UserDataPostView(generics.CreateAPIView):
     serializer_class = UserDataSerializer
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         user = request.user
