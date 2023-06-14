@@ -8,5 +8,6 @@ urlpatterns = [
     path('faculty_type/', FacultyTypeListView.as_view(), name='faculty-type'),
     path('user_registration/', UserRegistrationPostView.as_view(), name='user-registration'),
     path('user_transfer/', UserTransferPostView.as_view(), name='user-transfer'),
+    path('application/<int:pk>', ApplicationUpdateView.as_view(), name='application-update'),
 
 ]

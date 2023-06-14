@@ -4,6 +4,9 @@ from .models import User, Application
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
 
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+
 
 class PhoneAuthTokenSerializer(serializers.Serializer):
     phone = serializers.CharField(
@@ -85,3 +88,10 @@ class TransferSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'second_phone', 'passport_seria', 'date_if_birth', 'diploma_picture', 'ielts_picture',
                   'study_type', 'faculty', 'type', 'acceptance_order', 'course_order', 'removal_order',
                   'academic_certificate', 'university_license', 'university_accreditation', 'application_type']
+
+
+class ApplicationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Application
+        fields = '__all__'
