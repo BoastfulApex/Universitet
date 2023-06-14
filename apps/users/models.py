@@ -4,6 +4,23 @@ from .managers import UserManager
 from django.core.validators import RegexValidator
 from django.utils.translation import gettext_lazy as _
 import random
+import requests
+
+
+def send_sms(otp, phone):
+    username = 'foodline'
+    password = 'JvYkp44)-J&9'
+    sms_data = {
+        "messages": [{"recipient": f"{phone}", "message-id": "abc000000003",
+                      "sms": {
+                          "originator": "3700",
+                          "content": {
+                              "text": f"Toshkentiqt isodiyot va pedagodika : {otp}"}
+                      }
+                      }]
+    }
+    url = "http://91.204.239.44/broker-api/send"
+    requests.post(url=url, headers={}, auth=(username, password), json=sms_data)
 
 
 NEW, FULL, CONFIRMED, CANCELED, REGISTRATION, TRANSFER = (
@@ -43,6 +60,7 @@ class User(AbstractUser):
         self.set_password(str(otp))
         self.otp = otp
         self.save()
+        send_sms(otp=otp, phone=self.phone)
         return otp
 
 

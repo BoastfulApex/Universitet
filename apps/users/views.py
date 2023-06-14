@@ -13,6 +13,7 @@ from .serializers import *
 from .models import User
 from university.models import *
 
+
 class UserRegisterView(generics.CreateAPIView):
     serializer_class = UserSerializer
 
@@ -30,7 +31,6 @@ class UserRegisterView(generics.CreateAPIView):
 class LoginView(KnoxLoginView):
     permission_classes = (permissions.AllowAny,)
     serializers_class = PhoneAuthTokenSerializer
-
 
     def post(self, request, format=None):
         serializer = PhoneAuthTokenSerializer(data=request.data)
@@ -65,7 +65,7 @@ class PhoneVerify(generics.CreateAPIView):
             return Response(
                 {"status": True,
                  "code": 200,
-                 "data": user.otp,
+                 "data": [],
                  "message": []}
             )
 
