@@ -70,26 +70,11 @@ class PhoneVerify(generics.CreateAPIView):
             )
 
 
-class UserDataPostView(generics.CreateAPIView):
-    serializer_class = UserDataSerializer
+class UserRegistrationPostView(generics.CreateAPIView):
+    serializer_class = RegistrationSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request, *args, **kwargs):
-        try:
-            user = request.user
-            data = request.data
-            user.passport_seria = data['passport_seria']
-            user.full_name = data['full_name']
-            user.date_if_birth = data['date_if_birth']
-            user.diploma_picture = data['diploma_picture']
-            user.ielts_picture = data['ielts_picture']
-            # study_type = StudyType.objects.get(id=data['study_type'])
-            # user.study_type = study_type
-            # faculty = Faculty.objects.get(id=data['faculty'])
-            # user.faculty = faculty
-            # faculty_type = FacultyType.objects.get(id=data['faculty_type'])
-            # user.type = faculty_type
-            user.save()
-            return Response({'status': 'created'})
-        except Exception as exx:
-            return Response({"error": str(exx)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class UserTransferPostView(generics.CreateAPIView):
+    serializer_class = TransferSerializer
+    permission_classes = [permissions.IsAuthenticated]

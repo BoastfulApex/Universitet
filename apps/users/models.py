@@ -6,10 +6,13 @@ from django.utils.translation import gettext_lazy as _
 import random
 
 
-FULL, CONFIRMED, CANCELED = (
+NEW, FULL, CONFIRMED, CANCELED, REGISTRATION, TRANSFER = (
+    "Ariza topshirilmagan",
     "Ko'rib chiqilmoqda",
     "Tasdiqlandi",
-    "Rad etildi"
+    "Rad etildi",
+    "Ro'yxatdan o'tish",
+    "O'qishni ko'chirish"
 )
 
 
@@ -19,12 +22,6 @@ class User(AbstractUser):
         message="Telefon raqam Xalqaro Formatda 998YYXXXXXXX ko'rinishida kiritilishi kerak!"
     )
 
-    STATUS_TYPES = (
-        (FULL, FULL),
-        (CONFIRMED, CONFIRMED),
-        (CANCELED, CANCELED)
-    )
-
     full_name = models.CharField(_("first name"), max_length=150, blank=True, null=True)
     email = models.EmailField(_("email address"), blank=True, null=True)
     username = None
@@ -32,18 +29,6 @@ class User(AbstractUser):
     phone = models.CharField(max_length=15, null=True, unique=True, validators=[_validate_phone])
     telegram_id = models.CharField(max_length=100, null=True, blank=True)
     otp = models.CharField(max_length=10, null=True, blank=True)
-
-    passport_seria = models.CharField(_("Passport Seriyasi"), max_length=150, blank=True, null=True)
-    date_if_birth = models.DateField(null=True, blank=True)
-    diploma_seria = models.CharField(_("Diplom Seriyasi"), max_length=150, blank=True, null=True)
-    diploma_picture = models.ImageField(null=True)
-    ielts_picture = models.ImageField(null=True)
-
-    study_type = models.ForeignKey('university.StudyType', on_delete=models.SET_NULL, null=True)
-    faculty = models.ForeignKey('university.Faculty', on_delete=models.SET_NULL, null=True)
-    type = models.ForeignKey('university.FacultyType', on_delete=models.SET_NULL, null=True)
-
-    status = models.CharField(max_length=50, null=True, blank=True, choices=STATUS_TYPES)
 
     USERNAME_FIELD = "phone"
     REQUIRED_FIELDS = []
@@ -60,7 +45,43 @@ class User(AbstractUser):
         self.save()
         return otp
 
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            self.status = FULL
-        super(User, self).save(*args, **kwargs)
+
+class Application(models.Model):
+    _validate_phone = RegexValidator(
+        regex="(0|91)?[7-9][0-9]{9}",
+        message="Telefon raqam Xalqaro Formatda 998YYXXXXXXX ko'rinishida kiritilishi kerak!"
+    )
+
+    STATUS_TYPES = (
+        (FULL, FULL),
+        (CONFIRMED, CONFIRMED),
+        (CANCELED, CANCELED)
+    )
+
+    APPLICATION_TYPES = (
+        (REGISTRATION, REGISTRATION),
+        (TRANSFER, TRANSFER)
+    )
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    second_phone = models.CharField(max_length=15, null=True, validators=[_validate_phone])
+
+    study_type = models.ForeignKey('university.StudyType', on_delete=models.SET_NULL, null=True)
+    faculty = models.ForeignKey('university.Faculty', on_delete=models.SET_NULL, null=True)
+    type = models.ForeignKey('university.FacultyType', on_delete=models.SET_NULL, null=True)
+
+    passport_seria = models.CharField(_("Passport Seriyasi"), max_length=150, blank=True, null=True)
+    date_if_birth = models.DateField(null=True, blank=True)
+    diploma_seria = models.CharField(_("Diplom Seriyasi"), max_length=150, blank=True, null=True)
+    diploma_picture = models.ImageField(null=True)
+
+    ielts_picture = models.ImageField(null=True)
+
+    acceptance_order = models.ImageField(null=True)
+    course_order = models.ImageField(null=True)
+    removal_order = models.ImageField(null=True)
+    academic_certificate = models.ImageField(null=True)
+    university_license = models.ImageField(null=True)
+    university_accreditation = models.ImageField(null=True)
+
+    application_type = models.CharField(max_length=100, choices=APPLICATION_TYPES)
+    status = models.CharField(max_length=50, null=True, blank=True, choices=STATUS_TYPES, default=FULL)

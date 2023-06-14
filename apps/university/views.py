@@ -1,7 +1,7 @@
-from django.shortcuts import render
 from rest_framework import generics
 from .models import StudyType, Faculty, FacultyType
 from .serializers import StudyTypeSerializer, FacultySerializer, FacultyTypeSerializer
+from rest_framework import permissions
 
 
 class StudyTypeListView(generics.ListCreateAPIView):
