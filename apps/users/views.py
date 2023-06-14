@@ -11,7 +11,7 @@ from rest_framework import generics
 
 from .serializers import *
 from .models import User
-
+from apps.university.models import *
 
 class UserRegisterView(generics.CreateAPIView):
     serializer_class = UserSerializer
@@ -82,8 +82,11 @@ class UserDataPostView(generics.CreateAPIView):
         user.date_if_birth = data['date_if_birth']
         user.diploma_picture = data['diploma_picture']
         user.ielts_picture = data['ielts_picture']
-        user.study_type = data['study_type']
-        user.faculty = data['faculty']
-        user.type = data['type']
+        study_type = StudyType.objecys.get(id=data['study_type'])
+        user.study_type = study_type
+        faculty = Faculty.objecys.get(id=data['faculty'])
+        user.faculty = faculty
+        faculty_type = FacultyType.objecys.get(id=data['faculty_type'])
+        user.type = faculty_type
         user.save()
         return Response({'status': 'created'})
