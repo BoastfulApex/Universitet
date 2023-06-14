@@ -18,7 +18,7 @@ class FacultyTypeListView(generics.ListCreateAPIView):
     serializer_class = FacultyTypeSerializer
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = FacultyType.objects.all()
         faculty_id = self.request.GET.get('faculty_id')
         if faculty_id:
             queryset = queryset.filter(faculty_id=faculty_id)
