@@ -31,6 +31,16 @@ class LoginView(KnoxLoginView):
     permission_classes = (permissions.AllowAny,)
     serializers_class = PhoneAuthTokenSerializer
 
+    def get_post_response_data(self, request, token, instance, user):
+        return {
+            'token': token,
+            'user': {
+                'id': user.id,
+                'phone': user.phone,
+                'full_name': user.full_name,
+            }
+        }
+
     def post(self, request, format=None):
         serializer = PhoneAuthTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
