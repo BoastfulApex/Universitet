@@ -11,7 +11,7 @@ from rest_framework import generics, status
 
 from .serializers import *
 from .models import User
-from apps.university.models import *
+from university.models import *
 
 class UserRegisterView(generics.CreateAPIView):
     serializer_class = UserSerializer
