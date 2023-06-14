@@ -33,8 +33,9 @@ class User(AbstractUser):
     telegram_id = models.CharField(max_length=100, null=True, blank=True)
     otp = models.CharField(max_length=10, null=True, blank=True)
 
-    passport_seria = models.CharField(_("Passport Seria"), max_length=150, blank=True, null=True)
+    passport_seria = models.CharField(_("Passport Seriyasi"), max_length=150, blank=True, null=True)
     date_if_birth = models.DateField(null=True, blank=True)
+    diploma_seria = models.CharField(_("Diplom Seriyasi"), max_length=150, blank=True, null=True)
     diploma_picture = models.ImageField(null=True)
     ielts_picture = models.ImageField(null=True)
 

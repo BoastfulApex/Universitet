@@ -66,4 +66,4 @@ class UserDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'full_name', 'phone', 'passport_seria', 'date_if_birth', 'diploma_picture', 'ielts_picture',
-                  'study_type', 'faculty', 'type', 'status']
+                  'study_type', 'faculty', 'type']

@@ -29,6 +29,7 @@ class UserRegisterView(generics.CreateAPIView):
 
 class LoginView(KnoxLoginView):
     permission_classes = (permissions.AllowAny,)
+    serializers_class = PhoneAuthTokenSerializer
 
     def post(self, request, format=None):
         serializer = PhoneAuthTokenSerializer(data=request.data)
@@ -80,7 +81,6 @@ class UserDataPostView(generics.CreateAPIView):
         user.ielts_picture = data['ielts_picture']
         user.study_type = data['study_type']
         user.faculty = data['faculty']
-        user.type = data['type']
         user.type = data['type']
         user.save()
         return Response({'status': 'created'})
