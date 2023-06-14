@@ -82,7 +82,7 @@ class UserDataPostView(generics.CreateAPIView):
             user.full_name = data['full_name']
             user.date_if_birth = data['date_if_birth']
             # user.diploma_picture = data['diploma_picture']
-            user.ielts_picture = data['ielts_picture']
+            # user.ielts_picture = data['ielts_picture']
             # study_type = StudyType.objecys.get(id=data['study_type'])
             # user.study_type = study_type
             # faculty = Faculty.objecys.get(id=data['faculty'])
