@@ -75,7 +75,7 @@ class UserDataPostView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        try:
+        # try:
             user = request.user
             data = request.data
             user.passport_seria = data['passport_seria']
@@ -91,5 +91,5 @@ class UserDataPostView(generics.CreateAPIView):
             user.type = faculty_type
             user.save()
             return Response({'status': 'created'})
-        except Exception as exx:
-            return Response({"error": str(exx)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        # except Exception as exx:
+        #     return Response({"error": str(exx)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
