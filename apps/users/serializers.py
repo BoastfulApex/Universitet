@@ -45,14 +45,15 @@ class PhoneAuthTokenSerializer(serializers.Serializer):
 
 class PhoneVerifySerializer(serializers.Serializer):
     phone = serializers.CharField()
+    full_name = serializers.CharField()
 
-    def validate(self, attrs):
-        phone = attrs['phone']
-        data = User.objects.filter(phone=phone).first()
-        if not data:
-            raise serializers.ValidationError({"Error": "Mijozlar bazasida bu telefon raqamga mos ma'lumotlar "
-                                                        "topilmadi!"})
-        return attrs
+    # def validate(self, attrs):
+    #     phone = attrs['phone']
+    #     data = User.objects.filter(phone=phone).first()
+    #     if not data:
+    #         raise serializers.ValidationError({"Error": "Mijozlar bazasida bu telefon raqamga mos ma'lumotlar "
+    #                                                     "topilmadi!"})
+    #     return attrs
 
 
 class UserSerializer(serializers.ModelSerializer):

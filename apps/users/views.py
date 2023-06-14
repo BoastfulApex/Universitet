@@ -60,7 +60,9 @@ class PhoneVerify(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            user = User.objects.get(phone=request.data["phone"])
+            user, created = User.objects.get_or_create(phone=request.data["phone"])
+            user.full_name = request.data['full_name']
+            user.save()
             user.generate_otp()
             return Response(
                 {"status": True,
@@ -78,3 +80,4 @@ class UserRegistrationPostView(generics.CreateAPIView):
 class UserTransferPostView(generics.CreateAPIView):
     serializer_class = TransferSerializer
     permission_classes = [permissions.IsAuthenticated]
+

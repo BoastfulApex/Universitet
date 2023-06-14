@@ -20,7 +20,7 @@ def send_sms(otp, phone):
                       }]
     }
     url = "http://91.204.239.44/broker-api/send"
-    res = requests.post(url=url, headers={}, auth=(username, password), json=sms_data)
+    requests.post(url=url, headers={}, auth=(username, password), json=sms_data)
 
 
 NEW, FULL, CONFIRMED, CANCELED, REGISTRATION, TRANSFER = (
