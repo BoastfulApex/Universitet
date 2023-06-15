@@ -82,6 +82,20 @@ class UserTransferPostView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
 
+class ApplicationView(generics.ListAPIView):
+    serializer_class = ApplicationSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+    def get_queryset(self):
+        queryset = Application.objects.all()
+        application_type = self.request.GET.get('type')
+        if application_type == 'register':
+            queryset = queryset.filter(application_type='Ro\'yxatdan o\'tish')
+        if application_type == 'transfer':
+            queryset = queryset.filter(application_type='O\'qishni ko\'chirish')
+        return queryset
+
+
 class ApplicationUpdateView(generics.RetrieveUpdateAPIView):
     serializer_class = ApplicationSerializer
     permission_classes = [permissions.IsAdminUser]
