@@ -98,7 +98,7 @@ class ApplicationView(generics.ListAPIView):
 
 
 class ApplicationUpdateView(generics.CreateAPIView):
-    serializer_class = ApplicationSerializer
+    serializer_class = ApplicationUpdateSerializer
     permission_classes = [permissions.IsAdminUser]
 
     def post(self, request, *args, **kwargs):
