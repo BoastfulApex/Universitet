@@ -103,10 +103,6 @@ class ApplicationUpdateView(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         application = Application.objects.get(id=id)
-        if request.data['status'] == 'accept':
-            application.status = 'Tasdiqlandi'
-        else:
-            application.status = 'Rad etildi'
+        application.status = request.data['status']
         application.save()
-
         return Response({'status': 'edited'})
