@@ -84,16 +84,17 @@ class UserTransferPostView(generics.CreateAPIView):
 
 class ApplicationView(generics.ListAPIView):
     serializer_class = ApplicationSerializer
-    permission_classes = [permissions.IsAdminUser]
+    # permission_classes = [permissions.IsAdminUser]
 
     def get_queryset(self):
         queryset = Application.objects.all()
         application_type = self.request.GET.get('type')
         if application_type == 'register':
-            queryset = queryset.filter(application_type='Ro\'yxatdan o\'tish')
-        if application_type == 'transfer':
-            queryset = queryset.filter(application_type='O\'qishni ko\'chirish')
-        return queryset
+            return queryset.filter(application_type='Ro\'yxatdan o\'tish')
+        elif application_type == 'transfer':
+            return queryset.filter(application_type='O\'qishni ko\'chirish')
+        else:
+            return []
 
 
 class ApplicationUpdateView(generics.CreateAPIView):

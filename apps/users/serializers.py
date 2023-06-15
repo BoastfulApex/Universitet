@@ -91,6 +91,14 @@ class TransferSerializer(serializers.ModelSerializer):
 
 
 class ApplicationSerializer(serializers.ModelSerializer):
+    full_name = serializers.SerializerMethodField()
+    phone = serializers.SerializerMethodField()
+
+    def get_full_name(self, obj):
+        return obj.user.full_name if obj.user else None
+
+    def get_phone(self, obj):
+        return obj.user.phone if obj.user else None
 
     class Meta:
         model = Application
