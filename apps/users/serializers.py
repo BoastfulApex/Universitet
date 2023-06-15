@@ -95,3 +95,9 @@ class ApplicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
         fields = '__all__'
+
+
+class ApplicationUpdateSerializer(serializers.Serializer):
+    id = serializers.CharField(max_length=100)
+    status = serializers.CharField(max_length=100)
+

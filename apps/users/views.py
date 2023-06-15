@@ -96,15 +96,16 @@ class ApplicationView(generics.ListAPIView):
         return queryset
 
 
-class ApplicationUpdateView(generics.RetrieveUpdateAPIView):
+class ApplicationUpdateView(generics.CreateAPIView):
     serializer_class = ApplicationSerializer
     permission_classes = [permissions.IsAdminUser]
 
-    def get_queryset(self):
-        queryset = Application.objects.all()
-        application_type = self.request.GET.get('type')
-        if application_type == 'register':
-            queryset = queryset.filter(application_type='Ro\'yxatdan o\'tish')
-        if application_type == 'transfer':
-            queryset = queryset.filter(application_type='O\'qishni ko\'chirish')
-        return queryset
+    def post(self, request, *args, **kwargs):
+        application = Application.objects.get(id=id)
+        if request.data['status'] == 'accept':
+            application.status = 'Tasdiqlandi'
+        else:
+            application.status = 'Rad etildi'
+        application.save()
+
+        return Response({'status': 'edited'})
