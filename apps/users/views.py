@@ -99,10 +99,10 @@ class ApplicationView(generics.ListAPIView):
 
 class ApplicationUpdateView(generics.CreateAPIView):
     serializer_class = ApplicationUpdateSerializer
-    permission_classes = [permissions.IsAdminUser]
+    # permission_classes = [permissions.IsAdminUser]
 
     def post(self, request, *args, **kwargs):
-        application = Application.objects.get(id=id)
+        application = Application.objects.get(id=request.data['id'])
         application.status = request.data['status']
         application.save()
         return Response({'status': 'edited'})
