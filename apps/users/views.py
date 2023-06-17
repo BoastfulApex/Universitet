@@ -67,7 +67,7 @@ class PhoneVerify(generics.CreateAPIView):
             return Response(
                 {"status": True,
                  "code": 200,
-                 "data": [],
+                 "data": [user.otp],
                  "message": []}
             )
 

@@ -62,7 +62,7 @@ class PhoneVerifySerializer(serializers.Serializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'full_name', 'phone')
+        fields = ('id', 'full_name', 'phone', 'otp')
 
 
 class RegistrationApplicationSerializer(serializers.ModelSerializer):
