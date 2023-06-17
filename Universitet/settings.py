@@ -43,7 +43,9 @@ INSTALLED_APPS = [
     'drf_yasg',
     'knox',
     'users',
-    'university'
+    'university',
+    'moderator',
+    'student'
 ]
 
 MIDDLEWARE = [

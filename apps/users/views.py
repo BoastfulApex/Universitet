@@ -71,38 +71,3 @@ class PhoneVerify(generics.CreateAPIView):
                  "message": []}
             )
 
-
-class UserRegistrationPostView(generics.CreateAPIView):
-    serializer_class = RegistrationSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class UserTransferPostView(generics.CreateAPIView):
-    serializer_class = TransferSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class ApplicationView(generics.ListAPIView):
-    serializer_class = ApplicationSerializer
-    # permission_classes = [permissions.IsAdminUser]
-
-    def get_queryset(self):
-        queryset = Application.objects.all()
-        application_type = self.request.GET.get('type')
-        if application_type == 'register':
-            return queryset.filter(application_type='Ro\'yxatdan o\'tish')
-        elif application_type == 'transfer':
-            return queryset.filter(application_type='O\'qishni ko\'chirish')
-        else:
-            return []
-
-
-class ApplicationUpdateView(generics.CreateAPIView):
-    serializer_class = ApplicationUpdateSerializer
-    # permission_classes = [permissions.IsAdminUser]
-
-    def post(self, request, *args, **kwargs):
-        application = Application.objects.get(id=request.data['id'])
-        application.status = request.data['status']
-        application.save()
-        return Response({'status': 'edited'})
