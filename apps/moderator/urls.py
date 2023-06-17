@@ -12,5 +12,6 @@ urlpatterns = [
     path('application/', ApplicationView.as_view(), name='application-view'),
     path('application/<int:pk>', ApplicationObjectView.as_view(), name='application-object'),
     path('application_update/', ApplicationUpdateView.as_view(), name='application-update'),
+    path('subject/', SubjectView.as_view(), name='subject-view'),
 
 ]

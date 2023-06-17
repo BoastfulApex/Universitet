@@ -76,3 +76,9 @@ class FacultyTypeObjectView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = FacultyTypeSerializer
     permission_classes = [permissions.IsAdminUser]
 
+
+class SubjectView(generics.ListCreateAPIView):
+    queryset = Subject.objects.all()
+    serializer_class = SubjectSerializer
+    # permission_classes = [permissions.IsAdminUser]
+

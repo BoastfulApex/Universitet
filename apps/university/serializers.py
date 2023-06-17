@@ -18,3 +18,9 @@ class FacultyTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = FacultyType
         fields = '__all__'
+
+
+class SubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subject
+        fields = '__all__'
