@@ -18,6 +18,11 @@ class ApplicationView(generics.ListAPIView):
             return []
 
 
+class ApplicationObjectView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = ApplicationSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+
 class ApplicationUpdateView(generics.CreateAPIView):
     serializer_class = ApplicationUpdateSerializer
     permission_classes = [permissions.IsAdminUser]
@@ -32,11 +37,25 @@ class ApplicationUpdateView(generics.CreateAPIView):
 class StudyTypeView(generics.ListCreateAPIView):
     queryset = StudyType.objects.all()
     serializer_class = StudyTypeSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+
+class StudyTypeObjectView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = StudyType.objects.all()
+    serializer_class = StudyTypeSerializer
+    permission_classes = [permissions.IsAdminUser]
 
 
 class FacultyView(generics.ListCreateAPIView):
     queryset = Faculty.objects.all()
     serializer_class = FacultySerializer
+    permission_classes = [permissions.IsAdminUser]
+
+
+class FacultyObjectView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Faculty.objects.all()
+    serializer_class = FacultySerializer
+    permission_classes = [permissions.IsAdminUser]
 
 
 class FacultyTypeView(generics.ListCreateAPIView):
@@ -50,4 +69,10 @@ class FacultyTypeView(generics.ListCreateAPIView):
             queryset = queryset.filter(faculty_id=faculty_id)
 
         return queryset
+
+
+class FacultyTypeObjectView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = FacultyType.objects.all()
+    serializer_class = FacultyTypeSerializer
+    permission_classes = [permissions.IsAdminUser]
 
