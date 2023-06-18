@@ -20,7 +20,7 @@ class ApplicationView(generics.ListAPIView):
 
 class ApplicationObjectView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ApplicationSerializer
-    permission_classes = [permissions.IsAdminUser]
+    # permission_classes = [permissions.IsAdminUser]
 
 
 class ApplicationUpdateView(generics.CreateAPIView):
