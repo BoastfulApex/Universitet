@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from .serializers import *
 from rest_framework import generics, permissions
+from rest_framework.response import Response
 
 
 class ApplicationView(generics.ListAPIView):
     serializer_class = ApplicationSerializer
-    # permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.IsAdminUser]
 
     def get_queryset(self):
         queryset = Application.objects.all()
@@ -19,13 +20,14 @@ class ApplicationView(generics.ListAPIView):
 
 
 class ApplicationObjectView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
-    # permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.IsAdminUser]
 
 
 class ApplicationUpdateView(generics.CreateAPIView):
     serializer_class = ApplicationUpdateSerializer
-    # permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.IsAdminUser]
 
     def post(self, request, *args, **kwargs):
         application = Application.objects.get(id=request.data['id'])
