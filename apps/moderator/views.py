@@ -5,7 +5,7 @@ from rest_framework import generics, permissions
 
 class ApplicationView(generics.ListAPIView):
     serializer_class = ApplicationSerializer
-    permission_classes = [permissions.IsAdminUser]
+    # permission_classes = [permissions.IsAdminUser]
 
     def get_queryset(self):
         queryset = Application.objects.all()
