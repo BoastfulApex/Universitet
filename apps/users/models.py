@@ -101,5 +101,5 @@ class Application(models.Model):
     university_license = models.ImageField(null=True, blank=True)
     university_accreditation = models.ImageField(null=True, blank=True)
 
-    application_type = models.CharField(max_length=100, choices=APPLICATION_TYPES)
+    application_type = models.CharField(max_length=100, choices=APPLICATION_TYPES, null=True, blank=True)
     status = models.CharField(max_length=50, null=True, blank=True, choices=STATUS_TYPES, default=FULL)
