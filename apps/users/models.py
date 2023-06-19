@@ -81,6 +81,7 @@ class Application(models.Model):
         (TRANSFER, TRANSFER)
     )
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    full_name = models.CharField(max_length=100, null=True, blank=True)
     second_phone = models.CharField(max_length=15, null=True, validators=[_validate_phone])
 
     study_type = models.ForeignKey('university.StudyType', on_delete=models.SET_NULL, null=True)
@@ -103,3 +104,9 @@ class Application(models.Model):
 
     application_type = models.CharField(max_length=100, choices=APPLICATION_TYPES, null=True, blank=True)
     status = models.CharField(max_length=50, null=True, blank=True, choices=STATUS_TYPES, default=FULL)
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.full_name = self.user.full_name
+        super(Application, self).save(*args, **kwargs)
+
