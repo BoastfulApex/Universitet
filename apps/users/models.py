@@ -23,13 +23,14 @@ def send_sms(otp, phone):
     requests.post(url=url, headers={}, auth=(username, password), json=sms_data)
 
 
-NEW, FULL, CONFIRMED, CANCELED, REGISTRATION, TRANSFER = (
+NEW, FULL, CONFIRMED, CANCELED, REGISTRATION, TRANSFER, CONSULTATION = (
     "Ariza topshirilmagan",
     "Ko'rib chiqilmoqda",
     "Tasdiqlandi",
     "Rad etildi",
     "Ro'yxatdan o'tish",
-    "O'qishni ko'chirish"
+    "O'qishni ko'chirish",
+    "Konsultatsiya"
 )
 
 
@@ -78,7 +79,8 @@ class Application(models.Model):
 
     APPLICATION_TYPES = (
         (REGISTRATION, REGISTRATION),
-        (TRANSFER, TRANSFER)
+        (TRANSFER, TRANSFER),
+        (CONSULTATION, CONSULTATION)
     )
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     full_name = models.CharField(max_length=100, null=True, blank=True)
@@ -109,4 +111,3 @@ class Application(models.Model):
         if not self.pk:
             self.full_name = self.user.full_name
         super(Application, self).save(*args, **kwargs)
-

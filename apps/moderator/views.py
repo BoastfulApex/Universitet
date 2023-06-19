@@ -15,6 +15,8 @@ class ApplicationView(generics.ListAPIView):
             return queryset.filter(application_type='Ro\'yxatdan o\'tish')
         elif application_type == 'transfer':
             return queryset.filter(application_type='O\'qishni ko\'chirish')
+        elif application_type == 'consultation':
+            return queryset.filter(application_type='Konsultatsiya')
         else:
             return []
 
