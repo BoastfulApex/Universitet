@@ -2,6 +2,24 @@ from django.shortcuts import render
 from .serializers import *
 from rest_framework import generics, permissions
 from rest_framework.response import Response
+import requests
+
+
+def send_sms(phone, status, application_type, name):
+    username = 'onlineqabul'
+    password = 'p7LnIrh+-Vw'
+    sms_data = {
+        "messages": [{"recipient": f"{phone}", "message-id": "abc000000003",
+                      "sms": {
+                          "originator": "3700",
+                          "content": {
+                              "text": f"Assalomu alaykum {name}. Sizning {application_type} uchun qoldirgan arizangiz"
+                                      f" {status}! Toshkent iqtisodiyot va pedagogika instituti."}
+                      }
+                      }]
+    }
+    url = "http://91.204.239.44/broker-api/send"
+    requests.post(url=url, headers={}, auth=(username, password), json=sms_data)
 
 
 class ApplicationView(generics.ListAPIView):
@@ -29,12 +47,14 @@ class ApplicationObjectView(generics.RetrieveUpdateDestroyAPIView):
 
 class ApplicationUpdateView(generics.CreateAPIView):
     serializer_class = ApplicationUpdateSerializer
-    permission_classes = [permissions.IsAdminUser]
+    # permission_classes = [permissions.IsAdminUser]
 
     def post(self, request, *args, **kwargs):
         application = Application.objects.get(id=request.data['id'])
         application.status = request.data['status']
         application.save()
+        send_sms(phone=application.user.phone, application_type=application.application_type, status=application.status,
+                 name=application.user.full_name)
         return Response({'status': 'edited'})
 
 

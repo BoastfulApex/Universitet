@@ -30,4 +30,26 @@ class FacultyType(models.Model):
 
 class Subject(models.Model):
     name = models.CharField(max_length=500, null=True, blank=True)
+    passing_score = models.IntegerField(null=True)
+    test_file = models.FileField(null=True, blank=True)
+
+    def __str__(self):
+        try:
+            return self.name
+        except:
+            return self.id
+
+
+class Question(models.Model):
+    question = models.CharField(max_length=5000, null=True, blank=True)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, null=True)
+    image = models.ImageField(null=True, blank=True)
+
+
+class Answer(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True)
+    answer = models.CharField(max_length=5000, null=True, blank=True)
+    image = models.ImageField(null=True, blank=True)
+    is_correct = models.BooleanField(default=False)
+
 
