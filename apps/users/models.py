@@ -23,17 +23,6 @@ def send_sms(otp, phone):
     requests.post(url=url, headers={}, auth=(username, password), json=sms_data)
 
 
-NEW, FULL, CONFIRMED, CANCELED, REGISTRATION, TRANSFER, CONSULTATION = (
-    "Ariza topshirilmagan",
-    "Ko'rib chiqilmoqda",
-    "Tasdiqlandi",
-    "Rad etildi",
-    "Ro'yxatdan o'tish",
-    "O'qishni ko'chirish",
-    "Konsultatsiya"
-)
-
-
 class User(AbstractUser):
     _validate_phone = RegexValidator(
         regex="(0|91)?[7-9][0-9]{9}",
@@ -63,51 +52,3 @@ class User(AbstractUser):
         self.save()
         send_sms(otp=otp, phone=self.phone)
         return otp
-
-
-class Application(models.Model):
-    _validate_phone = RegexValidator(
-        regex="(0|91)?[7-9][0-9]{9}",
-        message="Telefon raqam Xalqaro Formatda 998YYXXXXXXX ko'rinishida kiritilishi kerak!"
-    )
-
-    STATUS_TYPES = (
-        (FULL, FULL),
-        (CONFIRMED, CONFIRMED),
-        (CANCELED, CANCELED)
-    )
-
-    APPLICATION_TYPES = (
-        (REGISTRATION, REGISTRATION),
-        (TRANSFER, TRANSFER),
-        (CONSULTATION, CONSULTATION)
-    )
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    full_name = models.CharField(max_length=100, null=True, blank=True)
-    second_phone = models.CharField(max_length=15, null=True, validators=[_validate_phone])
-
-    study_type = models.ForeignKey('university.StudyType', on_delete=models.SET_NULL, null=True)
-    faculty = models.ForeignKey('university.Faculty', on_delete=models.SET_NULL, null=True)
-    type = models.ForeignKey('university.FacultyType', on_delete=models.SET_NULL, null=True)
-
-    passport_seria = models.CharField(_("Passport Seriyasi"), max_length=150, blank=True, null=True)
-    date_if_birth = models.DateField(null=True, blank=True)
-    diploma_seria = models.CharField(_("Diplom Seriyasi"), max_length=150, blank=True, null=True)
-    diploma_picture = models.ImageField(null=True, blank=True)
-
-    ielts_picture = models.ImageField(null=True, blank=True)
-
-    acceptance_order = models.ImageField(null=True, blank=True)
-    course_order = models.ImageField(null=True, blank=True)
-    removal_order = models.ImageField(null=True, blank=True)
-    academic_certificate = models.ImageField(null=True, blank=True)
-    university_license = models.ImageField(null=True, blank=True)
-    university_accreditation = models.ImageField(null=True, blank=True)
-
-    application_type = models.CharField(max_length=100, choices=APPLICATION_TYPES, null=True, blank=True)
-    status = models.CharField(max_length=50, null=True, blank=True, choices=STATUS_TYPES, default=FULL)
-
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            self.full_name = self.user.full_name
-        super(Application, self).save(*args, **kwargs)

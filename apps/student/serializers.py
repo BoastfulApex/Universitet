@@ -1,14 +1,16 @@
 from rest_framework import serializers
 from users.models import *
 from university.serializers import *
+from .models import *
 
 
-class RegistrationApplicationSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Application
-        fields = ['id', 'full_name', 'phone', 'passport_seria', 'date_if_birth', 'diploma_picture', 'ielts_picture',
-                  'study_type', 'faculty', 'type']
+# class RegistrationApplicationSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model = Application
+#         fields = ['id', 'full_name', 'phone', 'passport_seria', 'date_if_birth', 'diploma_picture', 'ielts_picture',
+#                   'study_type', 'faculty', 'type']
+#
 
 
 class RegistrationSerializer(serializers.ModelSerializer):

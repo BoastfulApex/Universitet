@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Application
+from .models import User
 
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
@@ -63,32 +63,3 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'full_name', 'phone', 'otp')
-
-
-class RegistrationApplicationSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Application
-        fields = ['id', 'full_name', 'phone', 'passport_seria', 'date_if_birth', 'diploma_picture', 'ielts_picture',
-                  'study_type', 'faculty', 'type']
-
-
-class ApplicationSerializer(serializers.ModelSerializer):
-    full_name = serializers.SerializerMethodField()
-    phone = serializers.SerializerMethodField()
-
-    def get_full_name(self, obj):
-        return obj.user.full_name if obj.user else None
-
-    def get_phone(self, obj):
-        return obj.user.phone if obj.user else None
-
-    class Meta:
-        model = Application
-        fields = '__all__'
-
-
-class ApplicationUpdateSerializer(serializers.Serializer):
-    id = serializers.CharField(max_length=100)
-    status = serializers.ChoiceField(choices=Application.STATUS_TYPES)
-

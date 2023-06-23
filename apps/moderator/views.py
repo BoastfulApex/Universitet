@@ -106,3 +106,31 @@ class SubjectView(generics.ListCreateAPIView):
     serializer_class = SubjectSerializer
     # permission_classes = [permissions.IsAdminUser]
 
+
+class ListQuestionAPIView(generics.ListAPIView):
+    serializer_class = QuestionSerializer
+
+    def get_queryset(self):
+        subject_id = self.kwargs['subject_id']
+        return Question.objects.filter(subject_id=subject_id).all()
+
+    def list(self, request, *args, **kwargs):
+        questions = self.get_queryset()
+        data = []
+        for question in questions:
+            answers = Answer.objects.filter(question_id=question.id).all()
+            ans = []
+            for answer in answers:
+                d = {
+                    'id': answer.id,
+                    'answer': answer.answer,
+                }
+                ans.append(d)
+            d_q = {
+                'id': question.id,
+                'question': question.question,
+                'answers': ans
+            }
+            data.append(d_q)
+
+        return Response(data)
