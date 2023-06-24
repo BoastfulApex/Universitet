@@ -29,3 +29,9 @@ class TransferSerializer(serializers.ModelSerializer):
                   'diploma_seria', 'study_type', 'faculty', 'type', 'acceptance_order', 'course_order', 'removal_order',
                   'academic_certificate', 'university_license', 'university_accreditation', 'application_type']
 
+
+class TestSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Test
+        fields = '__all__'

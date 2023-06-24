@@ -24,7 +24,7 @@ def send_sms(phone, status, application_type, name):
 
 class ApplicationView(generics.ListAPIView):
     serializer_class = ApplicationSerializer
-    permission_classes = [permissions.IsAdminUser]
+    # permission_classes = [permissions.IsAdminUser]
 
     def get_queryset(self):
         queryset = Application.objects.all()
@@ -36,13 +36,13 @@ class ApplicationView(generics.ListAPIView):
         elif application_type == 'consultation':
             return queryset.filter(application_type='Konsultatsiya')
         else:
-            return []
+            return queryset
 
 
 class ApplicationObjectView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
-    permission_classes = [permissions.IsAdminUser]
+    # permission_classes = [permissions.IsAdminUser]
 
 
 class ApplicationUpdateView(generics.CreateAPIView):
@@ -61,30 +61,30 @@ class ApplicationUpdateView(generics.CreateAPIView):
 class StudyTypeView(generics.ListCreateAPIView):
     queryset = StudyType.objects.all()
     serializer_class = StudyTypeSerializer
-    permission_classes = [permissions.IsAdminUser]
+    # permission_classes = [permissions.IsAdminUser]
 
 
 class StudyTypeObjectView(generics.RetrieveUpdateDestroyAPIView):
     queryset = StudyType.objects.all()
     serializer_class = StudyTypeSerializer
-    permission_classes = [permissions.IsAdminUser]
+    # permission_classes = [permissions.IsAdminUser]
 
 
 class FacultyView(generics.ListCreateAPIView):
     queryset = Faculty.objects.all()
     serializer_class = FacultySerializer
-    permission_classes = [permissions.IsAdminUser]
+    # permission_classes = [permissions.IsAdminUser]
 
 
 class FacultyObjectView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Faculty.objects.all()
     serializer_class = FacultySerializer
-    permission_classes = [permissions.IsAdminUser]
+    # permission_classes = [permissions.IsAdminUser]
 
 
 class FacultyTypeView(generics.ListCreateAPIView):
     serializer_class = FacultyTypeSerializer
-    permission_classes = [permissions.IsAdminUser]
+    # permission_classes = [permissions.IsAdminUser]
 
     def get_queryset(self):
         queryset = FacultyType.objects.all()
@@ -98,7 +98,7 @@ class FacultyTypeView(generics.ListCreateAPIView):
 class FacultyTypeObjectView(generics.RetrieveUpdateDestroyAPIView):
     queryset = FacultyType.objects.all()
     serializer_class = FacultyTypeSerializer
-    permission_classes = [permissions.IsAdminUser]
+    # permission_classes = [permissions.IsAdminUser]
 
 
 class SubjectView(generics.ListCreateAPIView):
@@ -111,8 +111,11 @@ class ListQuestionAPIView(generics.ListAPIView):
     serializer_class = QuestionSerializer
 
     def get_queryset(self):
-        subject_id = self.kwargs['subject_id']
-        return Question.objects.filter(subject_id=subject_id).all()
+        try:
+            subject_id = self.kwargs['subject_id']
+            return Question.objects.filter(subject_id=subject_id).all()
+        except:
+            return []
 
     def list(self, request, *args, **kwargs):
         questions = self.get_queryset()
@@ -134,3 +137,4 @@ class ListQuestionAPIView(generics.ListAPIView):
             data.append(d_q)
 
         return Response(data)
+

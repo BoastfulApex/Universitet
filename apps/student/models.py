@@ -1,6 +1,6 @@
 from django.db import models
 from users.models import User
-
+from university.models import Question, get_random_choice
 from django.core.validators import RegexValidator
 from django.utils.translation import gettext_lazy as _
 
@@ -105,6 +105,13 @@ class Test(models.Model):
     finish_date = models.DateTimeField(null=True, blank=True)
 
 
+class TestQuestion(models.Model):
+    subject = models.ForeignKey('student.TestSubject', on_delete=models.CASCADE)
+    question = models.ForeignKey('university.Question', on_delete=models.CASCADE)
+    student_answer = models.ForeignKey('university.Answer', on_delete=models.CASCADE, null=True, blank=True)
+    solved = models.BooleanField(default=False)
+
+
 class TestSubject(models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
     subject = models.ForeignKey('university.Subject', on_delete=models.CASCADE)
@@ -112,12 +119,15 @@ class TestSubject(models.Model):
     wrong_answers = models.IntegerField(default=0)
     ball = models.FloatField(default=0)
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        for i in range(0, self.subject.question_number):
+            test_question = TestQuestion.objects.create(
+                subject=self,
+                question=get_random_choice()
+            )
+            test_question.save()
 
-class TestQuestion(models.Model):
-    subject = models.ForeignKey(TestSubject, on_delete=models.CASCADE)
-    question = models.ForeignKey('university.Question', on_delete=models.CASCADE)
-    student_answer = models.ForeignKey('university.Answer', on_delete=models.CASCADE, null=True, blank=True)
-    solved = models.BooleanField(default=False)
     #
     # def save(self, *args, **kwargs):
     #     super(TestQuestion, self).save(*args, **kwargs)

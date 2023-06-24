@@ -2,16 +2,29 @@ from django.db import models
 import pandas as pd
 from PIL import Image
 from io import BytesIO
+import random
 
 
 class StudyType(models.Model):
     name = models.CharField(max_length=500, null=True, blank=True)
+
+    def __str__(self):
+        try:
+            return f"{self.name}"
+        except:
+            return f"{self.id}"
 
 
 class Faculty(models.Model):
     admin_name = models.CharField(max_length=500, null=True, blank=True)
     site_name = models.CharField(max_length=500, null=True, blank=True)
     image = models.ImageField(null=True, blank=True)
+
+    def __str__(self):
+        try:
+            return f"{self.admin_name}"
+        except:
+            return f"{self.id}"
 
 
 class FacultyType(models.Model):
@@ -30,6 +43,12 @@ class FacultyType(models.Model):
     subject5 = models.ForeignKey('university.Subject', on_delete=models.SET_NULL, null=True, blank=True,
                                  related_name='fifth_subject')
     passing_score = models.IntegerField(default=0)
+
+    def __str__(self):
+        try:
+            return f"{self.name}"
+        except:
+            return f"{self.id}"
 
     def check_privilege(self):
         if self.subject1:
@@ -61,15 +80,15 @@ class Answer(models.Model):
 class Subject(models.Model):
     admin_name = models.CharField(max_length=500, null=True, blank=True)
     site_name = models.CharField(max_length=500, null=True, blank=True)
-    one_question_ball = models.IntegerField(null=True)
+    one_question_ball = models.FloatField(null=True)
     test_file = models.FileField(null=True, blank=True)
     question_number = models.IntegerField(null=True)
 
     def __str__(self):
         try:
-            return self.name
+            return f"{self.admin_name}"
         except:
-            return self.id
+            return f"{self.id}"
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -104,3 +123,11 @@ class Subject(models.Model):
                         answer.answer_image = image_path
 
                     answer.save()
+
+
+def get_random_choice():
+    choices = Question.objects.all()
+    if choices.exists():
+        return random.choice(choices)
+    else:
+        return None
