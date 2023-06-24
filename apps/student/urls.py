@@ -8,5 +8,6 @@ urlpatterns = [
     path('faculty_type/', FacultyTypeListView.as_view(), name='faculty-type'),
     path('user_registration/', UserRegistrationPostView.as_view(), name='user-registration'),
     path('user_transfer/', UserTransferPostView.as_view(), name='user-transfer'),
-    path('user_test_generate/', TestGenerate.as_view(), name='user_test_generate'),
+    path('test/generate/', TestGenerate.as_view(), name='user-test-generate'),
+    path('test/answer/<int:pk>', StudentTestAnswer.as_view(), name='user-test-answer'),
 ]

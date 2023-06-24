@@ -128,3 +128,22 @@ class TestGenerate(generics.CreateAPIView):
 
         return Response(data, status=status.HTTP_201_CREATED)
 
+
+class StudentTestAnswer(generics.UpdateAPIView):
+    serializer_class = StudentAnswerSerializer
+
+    def get_queryset(self):
+        return []
+
+    def update(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        instance = serializer.save()
+        if instance.student_answer and instance.student_answer.is_correct:
+            if not instance.solved:
+                instance.solved = True
+                instance.subject.correct_answers += 1
+                instance.subject.wrong_answers -= 1
+                instance.subject.ball += self.subject.subject.one_question_ball
+                instance.subject.save()
+                instance.save()
