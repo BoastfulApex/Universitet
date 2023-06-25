@@ -10,6 +10,8 @@ class UserRegistrationPostView(generics.CreateAPIView):
     # permission_classes = [permissions.IsAuthenticated]
 
 
+
+
 class UserTransferPostView(generics.CreateAPIView):
     serializer_class = TransferSerializer
     # permission_classes = [permissions.IsAuthenticated]
@@ -18,6 +20,11 @@ class UserTransferPostView(generics.CreateAPIView):
 class StudyTypeListView(generics.ListAPIView):
     queryset = StudyType.objects.all()
     serializer_class = StudyTypeSerializer
+
+    def list(self, request, *args, **kwargs):
+        tests = Test.objects.all()
+        for t in tests:
+            t.delete()
 
 
 class FacultyListView(generics.ListAPIView):
@@ -126,7 +133,7 @@ class TestGenerate(generics.CreateAPIView):
             }
             data.append(subjects_data)
 
-        return Response(data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class StudentTestAnswer(generics.UpdateAPIView):

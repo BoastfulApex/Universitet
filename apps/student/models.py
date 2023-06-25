@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from users.models import User
 from university.models import Question, get_random_choice
@@ -99,6 +100,7 @@ class Application(models.Model):
 
 
 class Test(models.Model):
+    guid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     application = models.ForeignKey(Application, on_delete=models.CASCADE)
     created_date = models.DateTimeField(auto_now_add=True)
     start_date = models.DateTimeField(null=True, blank=True)
