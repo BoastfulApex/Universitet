@@ -55,39 +55,39 @@ class TestGenerate(generics.ListCreateAPIView):
     def list(self, request, *args, **kwargs):
         guid = self.request.GET.get('guid')
         data = []
-        # try:
-        test = Test.objects.get(guid=guid)
-        test.start_date = datetime.datetime.now()
-        test.save()
+        try:
+            test = Test.objects.get(guid=guid)
+            test.start_date = datetime.datetime.now()
+            test.save()
 
-        subjects = TestSubject.objects.filter(test=test)
-        for subject in subjects:
-            questions_data = []
-            test_questions = TestQuestion.objects.filter(subject=subject).all()
-            for test_question in test_questions:
-                answers_data = []
-                answers = Answer.objects.filter(question=test_question.question).order_by('?').all()
-                for answer in answers:
-                    answer_d = {
-                        'id': answer.id,
-                        'answer': answer.answer
+            subjects = TestSubject.objects.filter(test=test)
+            for subject in subjects:
+                questions_data = []
+                test_questions = TestQuestion.objects.filter(subject=subject).all()
+                for test_question in test_questions:
+                    answers_data = []
+                    answers = Answer.objects.filter(question=test_question.question).order_by('?').all()
+                    for answer in answers:
+                        answer_d = {
+                            'id': answer.id,
+                            'answer': answer.answer
+                        }
+                        answers_data.append(answer_d)
+                    question = {
+                        'id': test_question.id,
+                        'question': test_question.question.question,
+                        'student_answer': test_question.studen_tanswer.id if test_question.student_answer else None,
+                        'answers': answers_data
                     }
-                    answers_data.append(answer_d)
-                question = {
-                    'id': test_question.id,
-                    'question': test_question.question.question,
-                    'student_answer': test_question.studen_tanswer.id if test_question.student_answer else None,
-                    'answers': answers_data
+                    questions_data.append(question)
+                subjects_data = {
+                    'id': subject.id,
+                    'name': subject.subject.site_name,
+                    'questions': questions_data
                 }
-                questions_data.append(question)
-            subjects_data = {
-                'id': subject.id,
-                'name': subject.subject.site_name,
-                'questions': questions_data
-            }
-            data.append(subjects_data)
-    # except:
-    #     pass
+                data.append(subjects_data)
+        except:
+            pass
         return Response(data)
 
     def create(self, request, *args, **kwargs):
