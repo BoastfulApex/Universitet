@@ -100,7 +100,7 @@ class Application(models.Model):
 
 
 class Test(models.Model):
-    # guid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    guid = models.UUIDField(default=uuid.uuid4, editable=False, null=True)
     application = models.ForeignKey(Application, on_delete=models.CASCADE)
     created_date = models.DateTimeField(auto_now_add=True)
     start_date = models.DateTimeField(null=True, blank=True)
