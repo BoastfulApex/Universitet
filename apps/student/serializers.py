@@ -34,7 +34,15 @@ class TestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Test
-        fields = '__all__'
+        fields = ['application', 'id', 'guid']
+
+
+class TestStartSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Test
+        fields = ['id', 'guid']
+
 
 
 class StudentAnswerSerializer(serializers.ModelSerializer):
@@ -42,3 +50,5 @@ class StudentAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = TestQuestion
         fields = ['id', 'student_answer']
+
+
