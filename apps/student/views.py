@@ -1,3 +1,5 @@
+import datetime
+
 from django.shortcuts import render
 from rest_framework import generics, status, permissions
 from .serializers import *
@@ -44,58 +46,50 @@ class FacultyTypeListView(generics.ListAPIView):
         return queryset
 
 
-class TestGenerate(generics.CreateAPIView):
+class TestGenerate(generics.ListCreateAPIView):
     serializer_class = TestSerializer
 
     def get_queryset(self):
-        return []
+        guid = self.request.GET.get('guid')
+        data = []
+        test = Test.objects.get(guid=guid)
+        test.start_date = datetime.datetime.now()
+        test.save()
+
+        subjects = TestSubject.objects.filter(test=test)
+        for subject in subjects:
+            questions_data = []
+            test_questions = TestQuestion.objects.filter(subject=subject).all()
+            for test_question in test_questions:
+                answers_data = []
+                answers = Answer.objects.filter(question=test_question.question).order_by('?').all()
+                for answer in answers:
+                    answer_d = {
+                        'id': answer.id,
+                        'answer': answer.answer
+                    }
+                    answers_data.append(answer_d)
+                question = {
+                    'id': test_question.id,
+                    'question': test_question.question.question,
+                    'student_answer': test_question.studen_tanswer.id if test_question.student_answer else None,
+                    'answers': answers_data
+                }
+                questions_data.append(question)
+            subjects_data = {
+                'id': subject.id,
+                'name': subject.subject.site_name,
+                'questions': questions_data
+            }
+            data.append(subjects_data)
+
+            return data
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         subjects = []
         instance = serializer.save()
-
-        # if instance.application.type.subject1 is not None:
-        #     test_subject = TestSubject.objects.create(
-        #         test=instance,
-        #         subject=instance.application.type.subject1
-        #
-        #     )
-        #     test_subject.save()
-        #     subjects.append(test_subject)
-        # if instance.application.type.subject2 is not None:
-        #     test_subject = TestSubject.objects.create(
-        #         test=instance,
-        #         subject=instance.application.type.subject2
-        #
-        #     )
-        #     test_subject.save()
-        #     subjects.append(test_subject)
-        # if instance.application.type.subject3 is not None:
-        #     test_subject = TestSubject.objects.create(
-        #         test=instance,
-        #         subject=instance.application.type.subject3
-        #
-        #     )
-        #     test_subject.save()
-        #     subjects.append(test_subject)
-        # if instance.application.type.subject4 is not None:
-        #     test_subject = TestSubject.objects.create(
-        #         test=instance,
-        #         subject=instance.application.type.subject4
-        #
-        #     )
-        #     test_subject.save()
-        #     subjects.append(test_subject)
-        # if instance.application.type.subject5 is not None:
-        #     test_subject = TestSubject.objects.create(
-        #         test=instance,
-        #         subject=instance.application.type.subject5
-        #     )
-        #     test_subject.save()
-        #     subjects.append(test_subject)
-
         for i in range(1, 6):
             subject = getattr(instance.application.type, f"subject{i}")
             if subject is not None:
@@ -105,7 +99,6 @@ class TestGenerate(generics.CreateAPIView):
                 )
                 test_subject.save()
                 subjects.append(test_subject)
-        # TestSubject.objects.bulk_create(subjects)
         data = []
         for subject in subjects:
             questions_data = []
@@ -154,3 +147,26 @@ class StudentTestAnswer(generics.UpdateAPIView):
                 instance.subject.ball += self.subject.subject.one_question_ball
                 instance.subject.save()
                 instance.save()
+
+
+class TestEnd(generics.ListAPIView):
+    serializer_class = TestSerializer
+
+    def get_queryset(self):
+        guid = self.request.GET.get('guid')
+        data = []
+        test = Test.objects.get(guid=guid)
+        test.end_date = datetime.datetime.now()
+        test.save()
+        subjects = TestSubject.objects.filter(test=test)
+        for subject in subjects:
+            sub = {
+                'id': subject.id,
+                'name': subject.site_name,
+                'ball': subject.ball,
+                'correct_answers': subject.correct_answers,
+                'wrong_answers': subject.wrong_answers,
+            }
+            data.append(sub)
+
+        return Response(data)
