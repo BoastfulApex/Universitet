@@ -105,6 +105,7 @@ class TestGenerate(generics.ListCreateAPIView):
         test = Test.objects.filter(application_id=application).first()
         if not test:
             subjects = []
+            serializer.is_valid(raise_exceptions=True)
             instance = serializer.save()
             for i in range(1, 6):
                 subject = getattr(instance.application.type, f"subject{i}")
