@@ -94,7 +94,8 @@ class Application(models.Model):
     def save(self, *args, **kwargs):
         if not self.pk:
             self.full_name = self.user.full_name
-            self.is_privilege = self.type.check_privilege()
+            if self.type:
+                self.is_privilege = self.type.check_privilege()
 
         super(Application, self).save(*args, **kwargs)
 
