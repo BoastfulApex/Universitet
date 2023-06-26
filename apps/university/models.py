@@ -43,6 +43,7 @@ class FacultyType(models.Model):
     subject5 = models.ForeignKey('university.Subject', on_delete=models.SET_NULL, null=True, blank=True,
                                  related_name='fifth_subject')
     passing_score = models.IntegerField(default=0)
+    test_minute = models.IntegerField(default=0)
 
     def __str__(self):
         try:

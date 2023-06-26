@@ -58,8 +58,9 @@ class TestGenerate(generics.ListCreateAPIView):
         try:
             test = Test.objects.get(guid=guid)
             test.start_date = datetime.datetime.now()
+            if test.subject.test.application.type.test_minute != 0:
+                test.end_date = test.start_date + datetime.timedelta(minutes=10)
             test.save()
-
             subjects = TestSubject.objects.filter(test=test)
             for subject in subjects:
                 questions_data = []
@@ -167,20 +168,35 @@ class TestEnd(generics.ListAPIView):
     serializer_class = TestSerializer
 
     def get_queryset(self):
-        guid = self.request.GET.get('guid')
-        data = []
-        test = Test.objects.get(guid=guid)
-        test.end_date = datetime.datetime.now()
-        test.save()
-        subjects = TestSubject.objects.filter(test=test)
-        for subject in subjects:
-            sub = {
-                'id': subject.id,
-                'name': subject.site_name,
-                'ball': subject.ball,
-                'correct_answers': subject.correct_answers,
-                'wrong_answers': subject.wrong_answers,
-            }
-            data.append(sub)
+        return []
 
-        return Response(data)
+    def list(self, request, *args, **kwargs):
+        guid = request.GET.get('guid')
+        data = []
+        test = Test.objects.filter(guid=guid).first()
+        if test:
+            test.end_date = datetime.datetime.now()
+            test.save()
+            all_ball = 0
+            subjects_d = []
+            subjects = TestSubject.objects.filter(test=test)
+            for subject in subjects:
+                sub = {
+                    'id': subject.id,
+                    'name': subject.site_name,
+                    'ball': subject.ball,
+                    'correct_answers': subject.correct_answers,
+                    'wrong_answers': subject.wrong_answers,
+                }
+                subjects_d.append(sub)
+            data = {
+                'id': test.id,
+                'guid': test.guid,
+                'start_date': test.start_date,
+                'end_date': test.end_date,
+                'ball': all_ball,
+                'subjects': subjects_d
+            }
+            return Response(data)
+        else:
+            return Response([])
