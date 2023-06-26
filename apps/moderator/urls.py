@@ -13,6 +13,7 @@ urlpatterns = [
     path('application/<int:pk>', ApplicationObjectView.as_view(), name='application-object'),
     path('application_update/', ApplicationUpdateView.as_view(), name='application-update'),
     path('subject/', SubjectView.as_view(), name='subject-view'),
+    path('subject/<int:pk>', SubjectDetail.as_view(), name='subject-view'),
     path('subject/<int:subject_id>/questions/', ListQuestionAPIView.as_view(), name='subject-questions'),
 
 ]

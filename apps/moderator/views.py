@@ -107,6 +107,11 @@ class SubjectView(generics.ListCreateAPIView):
     # permission_classes = [permissions.IsAdminUser]
 
 
+class SubjectDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Subject.objects.all()
+    serializer_class = SubjectSerializer
+
+
 class ListQuestionAPIView(generics.ListAPIView):
     serializer_class = QuestionSerializer
 
