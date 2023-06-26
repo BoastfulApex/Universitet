@@ -1,5 +1,5 @@
 import datetime
-
+import pytz
 from django.shortcuts import render
 from rest_framework import generics, status, permissions
 from .serializers import *
@@ -48,15 +48,17 @@ class TestGenerate(generics.ListCreateAPIView):
         return []
 
     def list(self, request, *args, **kwargs):
-        guid = self.request.GET.get('guid')
-        data = []
-        test_d = []
-        try:
+            guid = self.request.GET.get('guid')
+            data = []
+            test_d = []
+        # try:
             test = Test.objects.get(guid=guid)
             if not test.start_date:
                 test.start_date = datetime.datetime.now()
                 test.finish_date = test.start_date + datetime.timedelta(minutes=test.application.type.test_minute)
             test.save()
+            remain_date = test.finish_date - datetime.datetime.now(pytz.timezone('UTC'))
+            until = remain_date.total_seconds() // 60
             subjects = TestSubject.objects.filter(test=test)
             for subject in subjects:
                 questions_data = []
@@ -88,12 +90,13 @@ class TestGenerate(generics.ListCreateAPIView):
                 'guid': test.guid,
                 'start_date': test.start_date,
                 'finish_date': test.finish_date,
+                'qolgan_vaqt': until,
                 'ball': 0,
                 'data': data
             }
-        except:
-            pass
-        return Response(test_d)
+        # except:
+        #     pass
+            return Response(test_d)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -179,7 +182,7 @@ class TestEnd(generics.ListAPIView):
         data = []
         test = Test.objects.filter(guid=guid).first()
         if test:
-            test.end_date = datetime.datetime.now()
+            test.finish_date = datetime.datetime.now()
             test.save()
             all_ball = 0
             subjects_d = []
@@ -197,7 +200,7 @@ class TestEnd(generics.ListAPIView):
                 'id': test.id,
                 'guid': test.guid,
                 'start_date': test.start_date,
-                'end_date': test.end_date,
+                'end_date': test.finish_date,
                 'ball': all_ball,
                 'subjects': subjects_d
             }
