@@ -58,9 +58,9 @@ class TestGenerate(generics.ListCreateAPIView):
         test_d = []
         try:
             test = Test.objects.get(guid=guid)
-            test.start_date = datetime.datetime.now()
-            if test.subject.test.application.type.test_minute != 0:
-                test.end_date = test.start_date + datetime.timedelta(minutes=test.application.type.test_minute)
+            if not test.start_date:
+                test.start_date = datetime.datetime.now()
+                test.finish_date = test.start_date + datetime.timedelta(minutes=test.application.type.test_minute)
             test.save()
             subjects = TestSubject.objects.filter(test=test)
             for subject in subjects:
@@ -78,7 +78,7 @@ class TestGenerate(generics.ListCreateAPIView):
                     question = {
                         'id': test_question.id,
                         'question': test_question.question.question,
-                        'student_answer': test_question.studen_tanswer.id if test_question.student_answer else None,
+                        'student_answer': test_question.studenT_answer.id if test_question.student_answer else None,
                         'answers': answers_data
                     }
                     questions_data.append(question)
@@ -92,13 +92,13 @@ class TestGenerate(generics.ListCreateAPIView):
                 'id': test.id,
                 'guid': test.guid,
                 'start_date': test.start_date,
-                'end_date': test.end_date,
+                'finish_date': test.finish_date,
                 'ball': 0,
                 'data': data
             }
         except:
             pass
-        return Response(test_d)
+            return Response(test_d)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -111,10 +111,10 @@ class TestGenerate(generics.ListCreateAPIView):
                 test_subject = TestSubject.objects.create(
                     test=instance,
                     subject=subject,
-                    wrong_answers=subject.subject.question_number
+                    wrong_answers=subject.question_number
                 )
                 test_subject.save()
-                for i in range(0, test_subject.subject.question_number):
+                for i in range(0, subject.question_number):
                     test_question = TestQuestion.objects.create(
                         subject=test_subject,
                         question=get_random_choice()
@@ -122,9 +122,9 @@ class TestGenerate(generics.ListCreateAPIView):
                     test_question.save()
                 subjects.append(test_subject)
         data = []
-        for subject in subjects:
+        for subject_i in subjects:
             questions_data = []
-            test_questions = TestQuestion.objects.filter(subject=subject).all()
+            test_questions = TestQuestion.objects.filter(subject=subject_i).all()
             for test_question in test_questions:
                 answers_data = []
                 answers = Answer.objects.filter(question=test_question.question).order_by('?').all()
@@ -142,8 +142,8 @@ class TestGenerate(generics.ListCreateAPIView):
                 }
                 questions_data.append(question)
             subjects_data = {
-                'id': subject.id,
-                'name': subject.subject.site_name,
+                'id': subject_i.id,
+                'name': subject_i.subject.site_name,
                 'questions': questions_data
             }
             data.append(subjects_data)
