@@ -101,38 +101,60 @@ class TestGenerate(generics.ListCreateAPIView):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        subjects = []
-        instance = serializer.save()
-        for i in range(1, 6):
-            subject = getattr(instance.application.type, f"subject{i}")
-            if subject is not None:
-                test_subject = TestSubject.objects.create(
-                    test=instance,
-                    subject=subject,
-                    wrong_answers=subject.question_number
-                )
-                test_subject.save()
-                for j in range(0, subject.question_number):
-                    questions = Question.objects.filter(subject=subject)
-                    test_question = TestQuestion.objects.create(
-                        subject=test_subject,
-                        question=random.choice(questions)
+        application = request.data['application']
+        test = Test.objects.filter(application_id=application).first()
+        if not test:
+            subjects = []
+            instance = serializer.save()
+            for i in range(1, 6):
+                subject = getattr(instance.application.type, f"subject{i}")
+                if subject is not None:
+                    test_subject = TestSubject.objects.create(
+                        test=instance,
+                        subject=subject,
+                        wrong_answers=subject.question_number
                     )
-                    test_question.save()
-                subjects.append(test_subject)
-        data = []
-        for subject_i in subjects:
-            subjects_data = {
-                'id': subject_i.id,
-                'name': subject_i.subject.site_name,
-                'questions': subject_i.subject.question_number
+                    test_subject.save()
+                    for j in range(0, subject.question_number):
+                        questions = Question.objects.filter(subject=subject)
+                        test_question = TestQuestion.objects.create(
+                            subject=test_subject,
+                            question=random.choice(questions)
+                        )
+                        test_question.save()
+                    subjects.append(test_subject)
+            data = []
+            for subject_i in subjects:
+                subjects_data = {
+                    'id': subject_i.id,
+                    'name': subject_i.subject.site_name,
+                    'questions': subject_i.subject.question_number
+                }
+                data.append(subjects_data)
+            response_data = serializer.data
+            response_data['subjects'] = data
+            response_data['interval'] = instance.application.type.test_minute
+            return Response(response_data, status=status.HTTP_201_CREATED)
+        else:
+            subjects = TestSubject.objects.filter(test=test)
+            data = []
+            for subject_i in subjects:
+                subjects_data = {
+                    'id': subject_i.id,
+                    'name': subject_i.subject.site_name,
+                    'questions': subject_i.subject.question_number
+                }
+                data.append(subjects_data)
+            test_d = {
+                'id': test.id,
+                'guid': test.guid,
+                'start_date': test.start_date,
+                'finish_date': test.finish_date,
+                'ball': 0,
+                'subjects': data,
+                'interval': test.application.type.test_minute
             }
-            data.append(subjects_data)
-        response_data = serializer.data
-        response_data['subjects'] = data
-        response_data['interval'] = instance.application.type.test_minute
-        return Response(response_data, status=status.HTTP_201_CREATED)
+            return Response(test_d)
 
 
 class StudentTestAnswer(generics.UpdateAPIView):
