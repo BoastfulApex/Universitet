@@ -93,7 +93,7 @@ class TestGenerate(generics.ListCreateAPIView):
             }
         except:
             pass
-            return Response(test_d)
+        return Response(test_d)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
