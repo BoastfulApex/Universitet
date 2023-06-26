@@ -4,7 +4,7 @@ from django.shortcuts import render
 from rest_framework import generics, status, permissions
 from .serializers import *
 from rest_framework.response import Response
-from university.models import Answer
+from university.models import Answer, get_random_choice
 
 
 class UserRegistrationPostView(generics.CreateAPIView):
@@ -103,6 +103,13 @@ class TestGenerate(generics.ListCreateAPIView):
                     subject=subject
                 )
                 test_subject.save()
+                for i in range(0, test_subject.subject.question_number):
+                    test_question = TestQuestion.objects.create(
+                        subject=test_subject,
+                        question=get_random_choice()
+                    )
+                    test_question.save()
+
                 subjects.append(test_subject)
         data = []
         for subject in subjects:

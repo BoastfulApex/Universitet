@@ -123,12 +123,6 @@ class TestSubject(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        for i in range(0, self.subject.question_number):
-            test_question = TestQuestion.objects.create(
-                subject=self,
-                question=get_random_choice()
-            )
-            test_question.save()
 
     #
     # def save(self, *args, **kwargs):
