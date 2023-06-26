@@ -57,7 +57,7 @@ class TestGenerate(generics.ListCreateAPIView):
                 test.start_date = datetime.datetime.now()
                 test.finish_date = test.start_date + datetime.timedelta(minutes=test.application.type.test_minute)
             test.save()
-            remain_date = test.finish_date - datetime.datetime.now(pytz.timezone('UTC'))
+            remain_date = test.finish_date - datetime.datetime.now(pytz.timezone('Asia/Tashkent'))
             until = remain_date.total_seconds() // 60
             subjects = TestSubject.objects.filter(test=test)
             for subject in subjects:
