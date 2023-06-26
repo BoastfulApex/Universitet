@@ -148,17 +148,19 @@ class StudentTestAnswer(generics.UpdateAPIView):
         return []
 
     def update(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        instance = serializer.save()
-        if instance.student_answer and instance.student_answer.is_correct:
-            if not instance.solved:
-                instance.solved = True
-                instance.subject.correct_answers += 1
-                instance.subject.wrong_answers -= 1
-                instance.subject.ball += self.subject.subject.one_question_ball
-                instance.subject.save()
-                instance.save()
+        test_question = TestQuestion.objects.get(id=kwargs['pk'])
+        answer = Answer.objects.get(id=request.data['student_answer'])
+        test_question.student_answer = answer
+        test_question.save()
+        if test_question.student_answer and test_question.student_answer.is_correct:
+            if not test_question.solved:
+                test_question.solved = True
+                test_question.subject.correct_answers += 1
+                test_question.subject.wrong_answers -= 1
+                test_question.subject.ball += test_question.subject.subject.one_question_ball
+                test_question.subject.save()
+                test_question.save()
+        return Response([])
 
 
 class TestEnd(generics.ListAPIView):

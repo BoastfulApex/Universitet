@@ -36,13 +36,23 @@ class TestSerializer(serializers.ModelSerializer):
         model = Test
         fields = ['application', 'id', 'guid']
 
+    def validate(self, attrs):
+        # Perform your validation logic here
+        # You can access the validated data using `attrs`
+
+        # Example validation: Check if application is active
+        application = attrs.get('application')
+        test = Test.objects.filter(application_id=application).first()
+        if test:
+            raise serializers.ValidationError(f"{test.guid}")
+        return attrs
+
 
 class TestStartSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Test
         fields = ['id', 'guid']
-
 
 
 class StudentAnswerSerializer(serializers.ModelSerializer):
