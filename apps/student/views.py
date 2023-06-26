@@ -69,12 +69,14 @@ class TestGenerate(generics.ListCreateAPIView):
                     for answer in answers:
                         answer_d = {
                             'id': answer.id,
-                            'answer': answer.answer
+                            'answer': answer.answer,
+                            'answer_image': answer.image if answer.image else None
                         }
                         answers_data.append(answer_d)
                     question = {
                         'id': test_question.id,
                         'question': test_question.question.question,
+                        'question_image': test_question.question.image if test_question.question.image else None,
                         'student_answer': test_question.studenT_answer.id if test_question.student_answer else None,
                         'answers': answers_data
                     }
