@@ -3,6 +3,7 @@ from .serializers import *
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 import requests
+from student .models import Test, TestSubject
 
 
 def send_sms(phone, status, application_type, name):
@@ -37,6 +38,72 @@ class ApplicationView(generics.ListAPIView):
             return queryset.filter(application_type='Konsultatsiya')
         else:
             return queryset
+
+    def list(self, request, *args, **kwargs):
+            queryset = self.get_queryset()
+            test_type = self.request.GET.get('test')
+            data = []
+            if test_type == 'passed':
+                queryset = queryset.filter(test_passed=True).all()
+                for application in queryset:
+                    all_ball = 0
+                    subjects_d = []
+                    test = Test.objects.filter(application=application).first()
+                    subjects = TestSubject.objects.filter(test=test).all()
+                    for subject in subjects:
+                        sub = {
+                            'id': subject.id,
+                            'name': subject.subject.site_name,
+                            'ball': subject.ball,
+                            'correct_answers': subject.correct_answers,
+                            'wrong_answers': subject.wrong_answers,
+                        }
+                        subjects_d.append(sub)
+                    test_data = {
+                        'id': test.id,
+                        'guid': test.guid,
+                        'start_date': test.start_date,
+                        'end_date': test.finish_date,
+                        'ball': all_ball,
+                        'subjects': subjects_d
+                    }
+                    app_data = {
+                        'id': application.id,
+                        'user': application.user.id,
+                        'phone': application.user.phone,
+                        'second_phone': application.second_phone,
+                        'full_name': application.full_name,
+                        'study_type': application.study_type.id,
+                        'faculty': application.faculty.id,
+                        'type': application.type.id,
+                        'passport_seria': application.passport_seria if application.passport_seria else None,
+                        'date_if_birth': application.date_if_birth if application.date_if_birth else None,
+                        'diploma_seria': application.diploma_seria if application.diploma_seria else None,
+                        'diploma_picture': application.diploma_picture.url if application.diploma_picture else None,
+                        'acceptance_order': application.acceptance_order.url if application.acceptance_order else None,
+                        'ielts_picture': application.ielts_picture.url if application.ielts_picture else None,
+                        'course_order': application.course_order.url if application.course_order else None,
+                        'removal_order': application.removal_order.url if application.removal_order else None,
+                        'academic_certificate': application.academic_certificate.url if application.academic_certificate else None,
+                        'university_license': application.university_license.url if application.university_license else None,
+                        'university_accreditation': application.university_accreditation.url if application.university_accreditation else None,
+                        'application_type': application.application_type,
+                        'status': application.status,
+                        'description': application.description if application.description else None,
+                        'test_data': test_data,
+                    }
+                    data.append(app_data)
+                return Response(data)
+            else:
+                queryset = self.filter_queryset(self.get_queryset())
+
+                page = self.paginate_queryset(queryset)
+                if page is not None:
+                    serializer = self.get_serializer(page, many=True)
+                    return self.get_paginated_response(serializer.data)
+
+                serializer = self.get_serializer(queryset, many=True)
+                return Response(serializer.data)
 
 
 class ApplicationObjectView(generics.RetrieveUpdateDestroyAPIView):

@@ -198,6 +198,9 @@ class TestEnd(generics.ListAPIView):
                     'wrong_answers': subject.wrong_answers,
                 }
                 subjects_d.append(sub)
+            test.application.test_passed = True
+            test.application.save()
+
             data = {
                 'id': test.id,
                 'guid': test.guid,
