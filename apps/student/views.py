@@ -47,10 +47,10 @@ class TestGenerate(generics.ListCreateAPIView):
         return []
 
     def list(self, request, *args, **kwargs):
-            guid = self.request.GET.get('guid')
-            data = []
-            test_d = []
-        # try:
+        guid = self.request.GET.get('guid')
+        data = []
+        test_d = []
+        try:
             test = Test.objects.get(guid=guid)
             if not test.start_date:
                 test.start_date = datetime.datetime.now()
@@ -95,9 +95,9 @@ class TestGenerate(generics.ListCreateAPIView):
                 'ball': 0,
                 'data': data
             }
-        # except:
-        #     pass
-            return Response(test_d)
+        except:
+            pass
+        return Response(test_d)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
