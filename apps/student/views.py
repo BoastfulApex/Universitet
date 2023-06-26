@@ -5,13 +5,12 @@ from rest_framework import generics, status, permissions
 from .serializers import *
 from rest_framework.response import Response
 from university.models import Answer, get_random_choice
+import random
 
 
 class UserRegistrationPostView(generics.CreateAPIView):
     serializer_class = RegistrationSerializer
     # permission_classes = [permissions.IsAuthenticated]
-
-
 
 
 class UserTransferPostView(generics.CreateAPIView):
@@ -114,41 +113,26 @@ class TestGenerate(generics.ListCreateAPIView):
                     wrong_answers=subject.question_number
                 )
                 test_subject.save()
-                for i in range(0, subject.question_number):
+                for j in range(0, subject.question_number):
+                    questions = Question.objects.filter(subject=subject)
                     test_question = TestQuestion.objects.create(
                         subject=test_subject,
-                        question=get_random_choice()
+                        question=random.choice(questions)
                     )
                     test_question.save()
                 subjects.append(test_subject)
         data = []
         for subject_i in subjects:
-            questions_data = []
-            test_questions = TestQuestion.objects.filter(subject=subject_i).all()
-            for test_question in test_questions:
-                answers_data = []
-                answers = Answer.objects.filter(question=test_question.question).order_by('?').all()
-                for answer in answers:
-                    answer_d = {
-                        'id': answer.id,
-                        'answer': answer.answer
-                    }
-                    answers_data.append(answer_d)
-                question = {
-                    'id': test_question.id,
-                    'question': test_question.question.question,
-                    'student_answer': test_question.studen_tanswer.id if test_question.student_answer else None,
-                    'answers': answers_data
-                }
-                questions_data.append(question)
             subjects_data = {
                 'id': subject_i.id,
                 'name': subject_i.subject.site_name,
-                'questions': questions_data
+                'questions': subject_i.subject.question_number
             }
             data.append(subjects_data)
-
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        response_data = serializer.data
+        response_data['subjects'] = data
+        response_data['interval'] = instance.application.type.test_minute
+        return Response(response_data, status=status.HTTP_201_CREATED)
 
 
 class StudentTestAnswer(generics.UpdateAPIView):
@@ -196,6 +180,7 @@ class TestEnd(generics.ListAPIView):
                     'ball': subject.ball,
                     'correct_answers': subject.correct_answers,
                     'wrong_answers': subject.wrong_answers,
+                    'all': subject.wrong_answers + subject.correct_answers,
                 }
                 subjects_d.append(sub)
             test.application.test_passed = True

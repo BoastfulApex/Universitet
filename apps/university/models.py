@@ -95,35 +95,42 @@ class Subject(models.Model):
         super().save(*args, **kwargs)
 
         if self.test_file:
-            file_path = self.test_file.path
-            df = pd.read_excel(file_path)
+            try:
+                file_path = self.test_file.path
+                df = pd.read_excel(file_path)
 
-            for i in df.index:
-                question_text = df['Savol'][i]
-                question_image = df['Rasm'][i]
+                for i in df.index:
+                    question_text = df['Savol'][i]
+                    question_image = df['Rasm'][i]
 
-                question = Question.objects.create(subject=self)
-                question.question = question_text
-                if pd.notna(question_image):  # Check if the cell contains an image
-                    image = Image.open(BytesIO(question_image))
-                    image_path = f'./files/question_images/{self.id}_{question.id}.jpg'  # Adjust the path as desired
-                    image.save(image_path)
-                    question.question_image = image_path
-                question.save()
-
-                # Save answers
-                for j in range(1, 5):
-                    answer_text = df[f'{j}-Javob'][i]
-                    answer_image = df[f'{j}-Rasm'][i]
-                    answer = Answer.objects.create(question=question, answer=answer_text)
-
-                    if pd.notna(answer_image):
-                        image = Image.open(BytesIO(answer_image))
-                        image_path = f'./files/answer_images/{self.id}_{question.id}_{j}.jpg'
+                    question = Question.objects.create(subject=self)
+                    question.question = question_text
+                    if pd.notna(question_image):  # Check if the cell contains an image
+                        image = Image.open(BytesIO(question_image))
+                        image_path = f'./files/question_images/{self.id}_{question.id}.jpg'  # Adjust the path as desired
                         image.save(image_path)
-                        answer.answer_image = image_path
+                        question.question_image = image_path
+                    question.save()
 
-                    answer.save()
+                    # Save answers
+                    for j in range(1, 5):
+                        answer_text = df[f'{j}-Javob'][i]
+                        answer_image = df[f'{j}-Rasm'][i]
+                        correct = False
+                        if i == 3:
+                            correct = True
+                        answer = Answer.objects.create(question=question, answer=answer_text, is_correct=correct)
+
+                        if pd.notna(answer_image):
+                            image = Image.open(BytesIO(answer_image))
+                            image_path = f'./files/answer_images/{self.id}_{question.id}_{j}.jpg'
+                            image.save(image_path)
+                            answer.answer_image = image_path
+                        answer.save()
+            except:
+                self.delete()
+        else:
+            self.delete()
 
 
 def get_random_choice():
