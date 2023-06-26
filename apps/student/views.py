@@ -23,11 +23,6 @@ class StudyTypeListView(generics.ListAPIView):
     queryset = StudyType.objects.all()
     serializer_class = StudyTypeSerializer
 
-    def list(self, request, *args, **kwargs):
-        tests = Test.objects.all()
-        for t in tests:
-            t.delete()
-
 
 class FacultyListView(generics.ListAPIView):
     queryset = Faculty.objects.all()
