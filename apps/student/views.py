@@ -55,11 +55,12 @@ class TestGenerate(generics.ListCreateAPIView):
     def list(self, request, *args, **kwargs):
         guid = self.request.GET.get('guid')
         data = []
+        test_d = []
         try:
             test = Test.objects.get(guid=guid)
             test.start_date = datetime.datetime.now()
             if test.subject.test.application.type.test_minute != 0:
-                test.end_date = test.start_date + datetime.timedelta(minutes=10)
+                test.end_date = test.start_date + datetime.timedelta(minutes=test.application.type.test_minute)
             test.save()
             subjects = TestSubject.objects.filter(test=test)
             for subject in subjects:
@@ -87,9 +88,17 @@ class TestGenerate(generics.ListCreateAPIView):
                     'questions': questions_data
                 }
                 data.append(subjects_data)
+            test_d = {
+                'id': test.id,
+                'guid': test.guid,
+                'start_date': test.start_date,
+                'end_date': test.end_date,
+                'ball': 0,
+                'data': data
+            }
         except:
             pass
-        return Response(data)
+        return Response(test_d)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -101,7 +110,8 @@ class TestGenerate(generics.ListCreateAPIView):
             if subject is not None:
                 test_subject = TestSubject.objects.create(
                     test=instance,
-                    subject=subject
+                    subject=subject,
+                    wrong_answers=subject.subject.question_number
                 )
                 test_subject.save()
                 for i in range(0, test_subject.subject.question_number):
@@ -110,7 +120,6 @@ class TestGenerate(generics.ListCreateAPIView):
                         question=get_random_choice()
                     )
                     test_question.save()
-
                 subjects.append(test_subject)
         data = []
         for subject in subjects:
@@ -183,7 +192,7 @@ class TestEnd(generics.ListAPIView):
             for subject in subjects:
                 sub = {
                     'id': subject.id,
-                    'name': subject.site_name,
+                    'name': subject.subject.site_name,
                     'ball': subject.ball,
                     'correct_answers': subject.correct_answers,
                     'wrong_answers': subject.wrong_answers,
