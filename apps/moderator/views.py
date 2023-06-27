@@ -105,6 +105,7 @@ class ApplicationObjectView(generics.RetrieveUpdateDestroyAPIView):
         all_ball = 0
         data = []
         subjects_d = []
+        test_data = []
         test = Test.objects.filter(application=application).first()
         if test:
             subjects = TestSubject.objects.filter(test=test).all()
