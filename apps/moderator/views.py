@@ -51,6 +51,7 @@ class ApplicationView(generics.ListAPIView):
                     test = Test.objects.filter(application=application).first()
                     subjects = TestSubject.objects.filter(test=test).all()
                     for subject in subjects:
+                        all_ball += subject.ball
                         sub = {
                             'id': subject.id,
                             'name': subject.subject.site_name,
