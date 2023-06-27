@@ -18,6 +18,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
 class ApplicationUpdateSerializer(serializers.Serializer):
     id = serializers.CharField(max_length=100)
     status = serializers.ChoiceField(choices=Application.STATUS_TYPES)
+    description = serializers.CharField(max_length=5000)
 
 
 class AnswerSerializer(serializers.ModelSerializer):

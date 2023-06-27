@@ -6,7 +6,7 @@ import requests
 from student .models import Test, TestSubject
 
 
-def send_sms(phone, status, application_type, name):
+def send_sms(phone, text):
     username = 'onlineqabul'
     password = 'p7LnIrh+-Vw'
     sms_data = {
@@ -14,8 +14,7 @@ def send_sms(phone, status, application_type, name):
                       "sms": {
                           "originator": "3700",
                           "content": {
-                              "text": f"Assalomu alaykum {name}. Sizning {application_type} uchun qoldirgan arizangiz"
-                                      f" {status}! Toshkent iqtisodiyot va pedagogika instituti."}
+                              "text": text}
                       }
                       }]
     }
@@ -120,9 +119,14 @@ class ApplicationUpdateView(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
         application = Application.objects.get(id=request.data['id'])
         application.status = request.data['status']
+        text = f"Assalomu alaykum {application.full_name}. Sizning {application.application_type} uchun qoldirgan arizangiz"
+        f" {application.status}!"
+        if request.data['description']:
+            text += f"Sabab: {request.data['description']}"
+            application.description = request.data['description']
         application.save()
-        send_sms(phone=application.user.phone, application_type=application.application_type, status=application.status,
-                 name=application.user.full_name)
+        text += "Toshkent iqtisodiyot va pedagogika instituti."
+        send_sms(phone=application.user.phone, text=text)
         return Response({'status': 'edited'})
 
 
