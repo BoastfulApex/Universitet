@@ -102,29 +102,30 @@ class ApplicationObjectView(generics.RetrieveUpdateDestroyAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         application = Application.objects.filter(id=kwargs['pk']).first()
-        test = Test.objects.filter(application=application).first()
         subjects = TestSubject.objects.filter(test=test).all()
         all_ball = 0
         data = []
         subjects_d = []
-        for subject in subjects:
-            all_ball += subject.ball
-            sub = {
-                'id': subject.id,
-                'name': subject.subject.site_name,
-                'ball': subject.ball,
-                'correct_answers': subject.correct_answers,
-                'wrong_answers': subject.wrong_answers,
+        test = Test.objects.filter(application=application).first()
+        if test:
+            for subject in subjects:
+                all_ball += subject.ball
+                sub = {
+                    'id': subject.id,
+                    'name': subject.subject.site_name,
+                    'ball': subject.ball,
+                    'correct_answers': subject.correct_answers,
+                    'wrong_answers': subject.wrong_answers,
+                }
+                subjects_d.append(sub)
+            test_data = {
+                'id': test.id,
+                'guid': test.guid,
+                'start_date': test.start_date,
+                'end_date': test.finish_date,
+                'ball': all_ball,
+                'subjects': subjects_d
             }
-            subjects_d.append(sub)
-        test_data = {
-            'id': test.id,
-            'guid': test.guid,
-            'start_date': test.start_date,
-            'end_date': test.finish_date,
-            'ball': all_ball,
-            'subjects': subjects_d
-        }
         app_data = {
             'id': application.id,
             'user': application.user.id,
