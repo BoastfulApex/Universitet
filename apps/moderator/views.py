@@ -102,12 +102,12 @@ class ApplicationObjectView(generics.RetrieveUpdateDestroyAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         application = Application.objects.filter(id=kwargs['pk']).first()
-        subjects = TestSubject.objects.filter(test=test).all()
         all_ball = 0
         data = []
         subjects_d = []
         test = Test.objects.filter(application=application).first()
         if test:
+            subjects = TestSubject.objects.filter(test=test).all()
             for subject in subjects:
                 all_ball += subject.ball
                 sub = {
