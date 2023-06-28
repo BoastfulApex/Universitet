@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from university.serializers import *
 from users.serializers import *
-from student.serializers import Application
+from student.serializers import *
 from university.models import Group
 
 
@@ -35,4 +35,11 @@ class GroupsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Group
+        fields = '__all__'
+
+
+class StudentsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Student
         fields = '__all__'

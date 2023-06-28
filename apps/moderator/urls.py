@@ -16,6 +16,8 @@ urlpatterns = [
     path('subject/<int:pk>', SubjectDetail.as_view(), name='subject-detail-view'),
     path('subject/<int:subject_id>/questions/', ListQuestionAPIView.as_view(), name='subject-questions'),
     path('group/', GroupView.as_view(), name='group-view'),
+    path('students/', StudentView.as_view(), name='students-view'),
     path('group/<int:pk>', GroupDetail.as_view(), name='group-detail'),
 
 ]
+

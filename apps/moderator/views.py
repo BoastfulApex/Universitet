@@ -246,3 +246,8 @@ class GroupView(generics.ListCreateAPIView):
 class GroupDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Group.objects.all()
     serializer_class = GroupsSerializer
+
+
+class StudentView(generics.ListAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentsSerializer
