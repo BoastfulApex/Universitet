@@ -1,6 +1,6 @@
 from .serializers import *
 from .paginators import ApplicationPagination
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 import requests
 from student .models import Test, TestSubject, Student
@@ -45,54 +45,6 @@ class ApplicationView(generics.ListAPIView):
             queryset = queryset.filter(test_passed=True)
 
         return queryset
-
-        #     test = Test.objects.filter(application=application).first()
-                #     subjects = TestSubject.objects.filter(test=test).all()
-                #     for subject in subjects:
-                #         all_ball += subject.ball
-                #         sub = {
-                #             'id': subject.id,
-                #             'name': subject.subject.site_name,
-                #             'ball': subject.ball,
-                #             'correct_answers': subject.correct_answers,
-                #             'wrong_answers': subject.wrong_answers,
-                #         }
-                #         subjects_d.append(sub)
-                #     test_data = {
-                #         'id': test.id,
-                #         'guid': test.guid,
-                #         'start_date': test.start_date,
-                #         'end_date': test.finish_date,
-                #         'ball': all_ball,
-                #         'subjects': subjects_d
-                #     }
-                #     app_data = {
-                #         'id': application.id,
-                #         'user': application.user.id,
-                #         'phone': application.user.phone,
-                #         'second_phone': application.second_phone,
-                #         'full_name': application.full_name,
-                #         'study_type': application.study_type.id,
-                #         'faculty': application.faculty.id,
-                #         'type': application.type.id,
-                #         'passport_seria': application.passport_seria if application.passport_seria else None,
-                #         'date_if_birth': application.date_if_birth if application.date_if_birth else None,
-                #         'diploma_seria': application.diploma_seria if application.diploma_seria else None,
-                #         'diploma_picture': application.diploma_picture.url if application.diploma_picture else None,
-                #         'acceptance_order': application.acceptance_order.url if application.acceptance_order else None,
-                #         'ielts_picture': application.ielts_picture.url if application.ielts_picture else None,
-                #         'course_order': application.course_order.url if application.course_order else None,
-                #         'removal_order': application.removal_order.url if application.removal_order else None,
-                #         'academic_certificate': application.academic_certificate.url if application.academic_certificate else None,
-                #         'university_license': application.university_license.url if application.university_license else None,
-                #         'university_accreditation': application.university_accreditation.url if application.university_accreditation else None,
-                #         'application_type': application.application_type,
-                #         'status': application.status,
-                #         'description': application.description if application.description else None,
-                #         'test_data': test_data,
-                #     }
-                #     data.append(app_data)
-                # return Response(data)
 
 
 class ApplicationObjectView(generics.RetrieveUpdateDestroyAPIView):
@@ -273,3 +225,24 @@ class ListQuestionAPIView(generics.ListAPIView):
 
         return Response(data)
 
+
+class GroupView(generics.ListCreateAPIView):
+    queryset = Group.objects.all()
+    serializer_class = GroupsSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        group = serializer.save()
+        headers = self.get_success_headers(serializer.data)
+        group.faculty_type.group_name = group.name
+        group.faculty_type.group_students = group.students
+        group.faculty_type.save()
+        group.name = get_valid_group_name(group.faculty_type)
+        group.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class GroupDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Group.objects.all()
+    serializer_class = GroupsSerializer

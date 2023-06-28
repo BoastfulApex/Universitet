@@ -2,13 +2,10 @@ from rest_framework import serializers
 from university.serializers import *
 from users.serializers import *
 from student.serializers import Application
+from university.models import Group
 
 
 class ApplicationSerializer(serializers.ModelSerializer):
-    phone = serializers.SerializerMethodField()
-
-    def get_phone(self, obj):
-        return obj.user.phone if obj.user else None
 
     class Meta:
         model = Application
@@ -24,11 +21,18 @@ class ApplicationUpdateSerializer(serializers.Serializer):
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
-        fields = ('id', 'answer', 'image')
+        fields = ['id', 'answer', 'image']
 
 
 class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ('id', 'question', 'image')
+        fields = ['id', 'question', 'image']
+
+
+class GroupsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Group
+        fields = '__all__'

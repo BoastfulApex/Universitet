@@ -3,6 +3,7 @@ import pandas as pd
 from PIL import Image
 from io import BytesIO
 import random
+from django.db import transaction
 
 
 class StudyType(models.Model):
@@ -44,6 +45,8 @@ class FacultyType(models.Model):
                                  related_name='fifth_subject')
     passing_score = models.IntegerField(default=0)
     test_minute = models.IntegerField(default=0)
+    group_name = models.CharField(max_length=1000, null=True, blank=True)
+    group_students = models.IntegerField(default=0)
 
     def __str__(self):
         try:
@@ -133,9 +136,26 @@ class Subject(models.Model):
             self.delete()
 
 
+class Group(models.Model):
+    name = models.CharField(max_length=1000)
+    students = models.IntegerField(default=0)
+    faculty_type = models.ForeignKey(FacultyType, on_delete=models.CASCADE, null=True)
+    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE, null=True)
+
+
 def get_random_choice():
     choices = Question.objects.all()
     if choices.exists():
         return random.choice(choices)
     else:
         return None
+
+
+def get_valid_group_name(faculty_type):
+    i = 1
+    while True:
+        group = Group.objects.filter(name=f"{faculty_type.group_name}-{i}")
+        if not group:
+            return f"{faculty_type.group_name}-{i}"
+            break
+        i += 1
