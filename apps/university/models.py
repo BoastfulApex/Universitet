@@ -150,12 +150,3 @@ def get_random_choice():
     else:
         return None
 
-
-def get_valid_group_name(faculty_type):
-    i = 1
-    while True:
-        group = Group.objects.filter(name=f"{faculty_type.group_name}-{i}")
-        if not group:
-            return f"{faculty_type.group_name}-{i}"
-            break
-        i += 1
