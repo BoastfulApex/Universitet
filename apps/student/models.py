@@ -23,6 +23,8 @@ class Student(models.Model):
         message="Telefon raqam Xalqaro Formatda 998YYXXXXXXX ko'rinishida kiritilishi kerak!"
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    group = models.ForeignKey('university.Group', on_delete=models.SET_NULL, null=True, blank=True)
+
     second_phone = models.CharField(max_length=15, null=True, validators=[_validate_phone])
 
     study_type = models.ForeignKey('university.StudyType', on_delete=models.SET_NULL, null=True)
