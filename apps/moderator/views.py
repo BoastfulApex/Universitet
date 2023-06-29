@@ -54,12 +54,14 @@ class ApplicationObjectView(generics.RetrieveUpdateDestroyAPIView):
     # permission_classes = [permissions.IsAdminUser]
 
     def retrieve(self, request, *args, **kwargs):
-        application = Application.objects.filter(id=kwargs['pk']).first()
+        instance = self.get_object()
+
+        serializer = self.get_serializer(instance)
         all_ball = 0
         data = []
         subjects_d = []
         test_data = []
-        test = Test.objects.filter(application=application).first()
+        test = Test.objects.filter(application=instance).first()
         if test:
             subjects = TestSubject.objects.filter(test=test).all()
             for subject in subjects:
@@ -80,32 +82,37 @@ class ApplicationObjectView(generics.RetrieveUpdateDestroyAPIView):
                 'ball': all_ball,
                 'subjects': subjects_d
             }
-        app_data = {
-            'id': application.id,
-            'user': application.user.id,
-            'phone': application.user.phone,
-            'second_phone': application.second_phone,
-            'full_name': application.user.full_name,
-            'study_type': application.study_type.id,
-            'faculty': application.faculty.id,
-            'type': application.type.id,
-            'passport_seria': application.passport_seria if application.passport_seria else None,
-            'date_if_birth': application.date_if_birth if application.date_if_birth else None,
-            'diploma_seria': application.diploma_seria if application.diploma_seria else None,
-            'diploma_picture': application.diploma_picture.url if application.diploma_picture else None,
-            'acceptance_order': application.acceptance_order.url if application.acceptance_order else None,
-            'ielts_picture': application.ielts_picture.url if application.ielts_picture else None,
-            'course_order': application.course_order.url if application.course_order else None,
-            'removal_order': application.removal_order.url if application.removal_order else None,
-            'academic_certificate': application.academic_certificate.url if application.academic_certificate else None,
-            'university_license': application.university_license.url if application.university_license else None,
-            'university_accreditation': application.university_accreditation.url if application.university_accreditation else None,
-            'application_type': application.application_type,
-            'status': application.status,
-            'description': application.description if application.description else None,
-            'test_data': test_data,
-        }
-        return Response(app_data)
+        data = serializer.data
+        data['test'] = test_data
+        return Response(data)
+
+        # application = Application.objects.filter(id=kwargs['pk']).first()
+        # app_data = {
+        #     'id': application.id,
+        #     'user': application.user.id,
+        #     'phone': application.user.phone,
+        #     'second_phone': application.second_phone,
+        #     'full_name': application.user.full_name,
+        #     'study_type': application.study_type.id,
+        #     'faculty': application.faculty.id,
+        #     'type': application.type.id,
+        #     'passport_seria': application.passport_seria if application.passport_seria else None,
+        #     'date_if_birth': application.date_if_birth if application.date_if_birth else None,
+        #     'diploma_seria': application.diploma_seria if application.diploma_seria else None,
+        #     'diploma_picture': application.diploma_picture.url if application.diploma_picture else None,
+        #     'acceptance_order': application.acceptance_order.url if application.acceptance_order else None,
+        #     'ielts_picture': application.ielts_picture.url if application.ielts_picture else None,
+        #     'course_order': application.course_order.url if application.course_order else None,
+        #     'removal_order': application.removal_order.url if application.removal_order else None,
+        #     'academic_certificate': application.academic_certificate.url if application.academic_certificate else None,
+        #     'university_license': application.university_license.url if application.university_license else None,
+        #     'university_accreditation': application.university_accreditation.url if application.university_accreditation else None,
+        #     'application_type': application.application_type,
+        #     'status': application.status,
+        #     'description': application.description if application.description else None,
+        #     'test_data': test_data,
+        # }
+        # return Response(app_data)
 
 
 class ApplicationUpdateView(generics.CreateAPIView):
