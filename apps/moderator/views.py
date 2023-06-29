@@ -121,7 +121,7 @@ class ApplicationUpdateView(generics.CreateAPIView):
             application.description = request.data['description']
         application.save()
         if application.status == "Tasdiqlandi":
-            student = Student.objects.create(user=application.user)
+            student, created = Student.objects.get_or_create(user=application.user)
             student.study_type = application.study_type
             student.passport_seria = application.passport_seria
             student.faculty = application.faculty
