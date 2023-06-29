@@ -43,6 +43,13 @@ class Student(models.Model):
     university_license = models.ImageField(null=True, blank=True)
     university_accreditation = models.ImageField(null=True, blank=True)
 
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.full_name = self.user.full_name
+            self.phone = self.user.phone
+        super(Student, self).save(*args, **kwargs)
+
+
 
 class Application(models.Model):
     _validate_phone = RegexValidator(
@@ -95,9 +102,9 @@ class Application(models.Model):
     def save(self, *args, **kwargs):
         if not self.pk:
             self.full_name = self.user.full_name
+            self.phone = self.user.phone
             if self.type:
                 self.is_privilege = self.type.check_privilege()
-
         super(Application, self).save(*args, **kwargs)
 
 
@@ -125,14 +132,3 @@ class TestSubject(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-
-    #
-    # def save(self, *args, **kwargs):
-    #     super(TestQuestion, self).save(*args, **kwargs)
-    #     if self.student_answer and self.student_answer.is_correct:
-    #         if not self.solved:
-    #             self.solved = True
-    #             self.subject.correct_answers += 1
-    #             self.subject.wrong_answers -= 1
-    #             self.subject.ball += self.subject.subject.one_question_ball
-    #             self.subject.save()

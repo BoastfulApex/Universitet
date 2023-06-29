@@ -2,6 +2,7 @@ from .serializers import *
 from .paginators import ApplicationPagination
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
+from rest_framework.filters import SearchFilter
 import requests
 from student .models import Test, TestSubject, Student
 
@@ -249,5 +250,13 @@ class GroupDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class StudentView(generics.ListAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentsSerializer
+    pagination_class = ApplicationPagination
+    filter_backends = [SearchFilter]
+    search_fields = ['user__full_name', 'user__phone', 'passport_seria']
+
+
+class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentsSerializer

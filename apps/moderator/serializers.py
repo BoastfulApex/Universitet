@@ -38,7 +38,15 @@ class GroupsSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['phone', 'full_name']
+
+
 class StudentsSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
 
     class Meta:
         model = Student

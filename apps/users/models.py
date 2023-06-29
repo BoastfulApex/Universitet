@@ -29,7 +29,7 @@ class User(AbstractUser):
         message="Telefon raqam Xalqaro Formatda 998YYXXXXXXX ko'rinishida kiritilishi kerak!"
     )
 
-    full_name = models.CharField(_("first name"), max_length=150, blank=True, null=True)
+    full_name = models.CharField(_("full name"), max_length=150, blank=True, null=True)
     email = models.EmailField(_("email address"), blank=True, null=True)
     username = None
 
