@@ -85,7 +85,7 @@ class ApplicationObjectView(generics.RetrieveUpdateDestroyAPIView):
             'user': application.user.id,
             'phone': application.user.phone,
             'second_phone': application.second_phone,
-            'full_name': application.full_name,
+            'full_name': application.user.full_name,
             'study_type': application.study_type.id,
             'faculty': application.faculty.id,
             'type': application.type.id,
