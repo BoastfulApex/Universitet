@@ -43,13 +43,6 @@ class Student(models.Model):
     university_license = models.ImageField(null=True, blank=True)
     university_accreditation = models.ImageField(null=True, blank=True)
 
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            self.full_name = self.user.full_name
-            self.phone = self.user.phone
-        super(Student, self).save(*args, **kwargs)
-
-
 
 class Application(models.Model):
     _validate_phone = RegexValidator(
