@@ -5,7 +5,15 @@ from student.serializers import *
 from university.models import Group
 
 
+class StudentUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['phone', 'full_name', 'otp']
+
+
 class ApplicationSerializer(serializers.ModelSerializer):
+    user = StudentUserSerializer
 
     class Meta:
         model = Application
@@ -36,13 +44,6 @@ class GroupsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = '__all__'
-
-
-class StudentUserSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = ['phone', 'full_name', 'otp']
 
 
 class StudentsSerializer(serializers.ModelSerializer):
