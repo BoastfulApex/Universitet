@@ -6,7 +6,7 @@ from rest_framework.filters import SearchFilter
 import requests
 from student .models import Test, TestSubject, Student
 from .db_api import *
-
+import pandas as pd
 
 def send_sms(phone, text):
     username = 'onlineqabul'
@@ -106,6 +106,7 @@ class ApplicationUpdateView(generics.CreateAPIView):
             student.faculty = application.faculty
             student.type = application.type
             student.diploma_picture = application.diploma_picture
+            student.diploma_seria = application.diploma_seria
             student.ielts_picture = application.ielts_picture
             student.acceptance_order = application.acceptance_order
             student.course_order = application.course_order
@@ -241,7 +242,6 @@ class StudentView(generics.ListAPIView):
 
         if group_id:
             queryset = queryset.filter(group_id=group_id)
-            print(queryset)
         return queryset
 
 
@@ -249,3 +249,48 @@ class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentsSerializer
 
+
+class StudentsDoc(generics.ListAPIView):
+    serializer_class = StudentsSerializer
+
+    def get_queryset(self):
+        queryset = Student.objects.all()
+        group_id = self.request.GET.get('group_id')
+
+        if group_id:
+            queryset = queryset.filter(group_id=group_id)
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        students = self.get_queryset()
+        names = []
+        phones = []
+        passport_series = []
+        diploma_series = []
+        faculties = []
+        faculty_types = []
+        study_types = []
+        groups = []
+        for student in students:
+            names.append(student.user.full_name)
+            phones.append(student.user.phone)
+            passport_series.append(student.passport_seria)
+            diploma_series.append(student.diploma_seria)
+            faculties.append(student.faculty.admin_name)
+            study_types.append(student.study_type.name)
+            faculty_types.append(student.type.name)
+            groups.append(student.group.name)
+
+        df = pd.DataFrame({
+            "Ismi": names,
+            "Telefon raqami": phones,
+            "Fakultet": faculties,
+            "Yo'nalish": faculty_types,
+            "O'qish turi": study_types,
+            "Guruh": groups,
+            "Passport seria": passport_series,
+            "Diplom": diploma_series,
+        })
+        df.to_excel('./files/xisobot.xlsx')
+
+        return Response({'status': 'ok', 'file': "http://185.65.202.40:1009/files/xisobot.xlsx"})

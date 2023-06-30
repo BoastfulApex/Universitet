@@ -72,3 +72,4 @@ class StudentsSerializer(serializers.ModelSerializer):
             instance.user = user
 
         return super().update(instance, validated_data)
+

@@ -19,6 +19,7 @@ urlpatterns = [
     path('students/', StudentView.as_view(), name='students-view'),
     path('students/<int:pk>', StudentDetail.as_view(), name='students-detail'),
     path('group/<int:pk>', GroupDetail.as_view(), name='group-detail'),
+    path('students_docs/', StudentsDoc.as_view(), name='students-docs'),
 
 ]
 
