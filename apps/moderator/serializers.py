@@ -27,7 +27,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
     #         user = user_serializer.update(user, user_data)
     #         instance.user = user
 
-        return super().update(instance, validated_data)
+        # return super().update(instance, validated_data)
 
 
 class ApplicationUpdateSerializer(serializers.Serializer):
