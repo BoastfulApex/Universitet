@@ -64,6 +64,8 @@ class Application(models.Model):
         (CONSULTATION, CONSULTATION)
     )
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    full_name = models.CharField(_("full name"), max_length=150, blank=True, null=True)
+    phone = models.CharField(max_length=15, null=True, unique=True, validators=[_validate_phone])
 
     second_phone = models.CharField(max_length=15, null=True, validators=[_validate_phone])
 
