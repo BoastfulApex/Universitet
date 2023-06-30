@@ -6,6 +6,7 @@ from .serializers import *
 from rest_framework.response import Response
 from university.models import Answer, get_random_choice
 import random
+from moderator.views import send_sms
 
 
 class UserRegistrationPostView(generics.CreateAPIView):
@@ -155,6 +156,9 @@ class TestGenerate(generics.ListCreateAPIView):
                 'subjects': data,
                 'interval': test.application.type.test_minute
             }
+            text = f"Sizning test yechish manzilingiz: http://tivpi.uz/test/{test.guid}. Toshkent iqtisodiyot va "\
+                   "pedagogika instituti."
+            send_sms(phone=test.application.user.phone, text=text)
             return Response(test_d)
 
 

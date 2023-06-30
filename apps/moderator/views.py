@@ -8,6 +8,7 @@ from student .models import Test, TestSubject, Student
 from .db_api import *
 import pandas as pd
 
+
 def send_sms(phone, text):
     username = 'onlineqabul'
     password = 'p7LnIrh+-Vw'
@@ -117,7 +118,7 @@ class ApplicationUpdateView(generics.CreateAPIView):
             student.group = get_valid_group(application.type)
             student.save()
         text += "Toshkent iqtisodiyot va pedagogika instituti."
-        # send_sms(phone=application.user.phone, text=text)
+        send_sms(phone=application.user.phone, text=text)
         return Response({'status': 'edited'})
 
 
