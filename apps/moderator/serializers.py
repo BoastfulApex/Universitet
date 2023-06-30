@@ -13,19 +13,19 @@ class StudentUserSerializer(serializers.ModelSerializer):
 
 
 class ApplicationSerializer(serializers.ModelSerializer):
-    user = StudentUserSerializer()
+    # user = StudentUserSerializer()
 
     class Meta:
         model = Application
         fields = '__all__'
 
-    def update(self, instance, validated_data):
-        user_data = validated_data.pop('user', None)
-        if user_data:
-            user_serializer = self.fields['user']
-            user = instance.user
-            user = user_serializer.update(user, user_data)
-            instance.user = user
+    # def update(self, instance, validated_data):
+    #     user_data = validated_data.pop('user', None)
+    #     if user_data:
+    #         user_serializer = self.fields['user']
+    #         user = instance.user
+    #         user = user_serializer.update(user, user_data)
+    #         instance.user = user
 
         return super().update(instance, validated_data)
 
