@@ -20,9 +20,9 @@ def get_group_students_value(group):
 
 def get_valid_group(faculty_type):
     group = Group.objects.filter(faculty_type=faculty_type).last()
-    if group.students <= get_group_students_value(group):
+    if not group and group.students <= get_group_students_value(group):
         group = Group.objects.create(
-            faculty_type = faculty_type,
+            faculty_type=faculty_type,
             faculty=faculty_type.faculty,
             name=get_valid_group_name(faculty_type),
             students=faculty_type
