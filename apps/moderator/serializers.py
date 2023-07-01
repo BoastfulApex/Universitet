@@ -39,14 +39,14 @@ class ApplicationUpdateSerializer(serializers.Serializer):
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
-        fields = ['id', 'answer', 'image']
+        fields = ['id', 'answer', 'image', 'is_correct']
 
 
 class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ['id', 'question', 'image']
+        fields = ['id', 'question', 'image', 'is_correct']
 
 
 class GroupsSerializer(serializers.ModelSerializer):

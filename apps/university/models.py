@@ -119,8 +119,9 @@ class Subject(models.Model):
                     for j in range(1, 5):
                         answer_text = df[f'{j}-Javob'][i]
                         answer_image = df[f'{j}-Rasm'][i]
+                        print(i, answer_text)
                         correct = False
-                        if i == 3:
+                        if j == 3:
                             correct = True
                         answer = Answer.objects.create(question=question, answer=answer_text, is_correct=correct)
 

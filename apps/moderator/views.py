@@ -295,3 +295,9 @@ class StudentsDoc(generics.ListAPIView):
         df.to_excel('./files/xisobot.xlsx')
 
         return Response({'status': 'ok', 'file': "http://185.65.202.40:1009/files/xisobot.xlsx"})
+
+
+class AnswerView(generics.ListAPIView):
+    serializer_class = AnswerSerializer
+    def get_queryset(self):
+        return Answer.objects.all()
