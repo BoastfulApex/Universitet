@@ -277,9 +277,9 @@ class StudentsDoc(generics.ListAPIView):
             phones.append(student.user.phone)
             passport_series.append(student.passport_seria)
             diploma_series.append(student.diploma_seria)
-            faculties.append(student.faculty.admin_name)
-            study_types.append(student.study_type.name)
-            faculty_types.append(student.type.name)
+            faculties.append(student.faculty.admin_name if student.faculty else None)
+            study_types.append(student.study_type.name if student.study_type else None)
+            faculty_types.append(student.type.name if student.type else None)
             groups.append(student.group.name if student.group else None)
 
         df = pd.DataFrame({
