@@ -32,18 +32,18 @@ class UserTransferPostView(generics.CreateAPIView):
     serializer_class = TransferSerializer
     # permission_classes = [permissions.IsAuthenticated]
 
-    def perform_create(self, serializer):
-        # Get the validated data from the serializer
-        validated_data = serializer.validated_data
-
-        # Extract the unique identifier field from the validated data
-        identifier = validated_data.get('user')
-        # Perform the get_or_create operation
-        instance, created = Application.objects.get_or_create(user=identifier, defaults=validated_data)
-        instance.status = "Ko'rib chiqilmoqda"
-        # Set the instance as the created obj ect and save it
-        serializer.instance = instance
-        serializer.save()
+    # def perform_create(self, serializer):
+    #     # Get the validated data from the serializer
+    #     validated_data = serializer.validated_data
+    #
+    #     # Extract the unique identifier field from the validated data
+    #     identifier = validated_data.get('user')
+    #     # Perform the get_or_create operation
+    #     instance, created = Application.objects.get_or_create(user=identifier, defaults=validated_data)
+    #     instance.status = "Ko'rib chiqilmoqda"
+    #     # Set the instance as the created obj ect and save it
+    #     serializer.instance = instance
+    #     serializer.save()
 
 
 class StudyTypeListView(generics.ListAPIView):

@@ -17,8 +17,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Application
-        fields = ['id', 'user', 'second_phone', 'passport_seria', 'date_if_birth', 'diploma_picture', 'ielts_picture',
-                  'diploma_seria', 'study_type', 'faculty', 'type', 'application_type']
+        fields = "__all__"
 
 
 class TransferSerializer(serializers.ModelSerializer):
