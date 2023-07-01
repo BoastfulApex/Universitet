@@ -40,7 +40,7 @@ class UserTransferPostView(generics.CreateAPIView):
         identifier = validated_data.get('user')
 
         # Perform the get_or_create operation
-        instance, created = Application.objects.get_or_create(user_id=identifier, defaults=validated_data)
+        instance, created = Application.objects.get_or_create(user_id=identifier.id, defaults=validated_data)
         instance.status = "Ko'rib chiqilmoqda"
         # Set the instance as the created obj ect and save it
         serializer.instance = instance
