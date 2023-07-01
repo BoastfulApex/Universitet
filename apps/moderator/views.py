@@ -280,7 +280,7 @@ class StudentsDoc(generics.ListAPIView):
             faculties.append(student.faculty.admin_name)
             study_types.append(student.study_type.name)
             faculty_types.append(student.type.name)
-            groups.append(student.group.name)
+            groups.append(student.group.name if student.group else None)
 
         df = pd.DataFrame({
             "Ismi": names,
@@ -299,5 +299,6 @@ class StudentsDoc(generics.ListAPIView):
 
 class AnswerView(generics.ListAPIView):
     serializer_class = AnswerSerializer
+
     def get_queryset(self):
         return Answer.objects.all()
