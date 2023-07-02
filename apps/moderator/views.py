@@ -31,11 +31,6 @@ class ApplicationView(generics.ListAPIView):
     pagination_class = ApplicationPagination
 
     def get_queryset(self):
-        applications = Application.objects.all()
-        for application in applications:
-            application.full_name = application.user.full_name
-            application.phone = application.user.phone
-            application.save()
         application_type_mapping = {key: value for key, value in [
             ('register', 'Ro\'yxatdan o\'tish'),
             ('transfer', 'O\'qishni ko\'chirish'),
