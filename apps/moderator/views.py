@@ -31,13 +31,17 @@ class ApplicationView(generics.ListAPIView):
     pagination_class = ApplicationPagination
 
     def get_queryset(self):
-        queryset = Application.objects.all()
+        applications = Application.objects.all()
+        for application in applications:
+            application.full_name = application.user.full_name
+            application.phone = application.user.phone
+            application.save()
         application_type_mapping = {key: value for key, value in [
             ('register', 'Ro\'yxatdan o\'tish'),
             ('transfer', 'O\'qishni ko\'chirish'),
             ('consultation', 'Konsultatsiya'),
         ]}
-
+        queryset = Application.objects.all()
         application_type = self.request.GET.get('type', None)
         test_type = self.request.GET.get('test', None)
 
