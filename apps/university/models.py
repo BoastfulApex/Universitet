@@ -47,6 +47,7 @@ class FacultyType(models.Model):
     test_minute = models.IntegerField(default=0)
     group_name = models.CharField(max_length=1000, null=True, blank=True)
     group_students = models.IntegerField(default=0)
+    contract_amount = models.IntegerField(default=0)
 
     def __str__(self):
         try:
@@ -119,7 +120,6 @@ class Subject(models.Model):
                     for j in range(1, 5):
                         answer_text = df[f'{j}-Javob'][i]
                         answer_image = df[f'{j}-Rasm'][i]
-                        print(i, answer_text)
                         correct = False
                         if j == 3:
                             correct = True
