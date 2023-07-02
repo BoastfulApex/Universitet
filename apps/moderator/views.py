@@ -23,6 +23,7 @@ def send_sms(phone, text):
     }
     url = "http://91.204.239.44/broker-api/send"
     requests.post(url=url, headers={}, auth=(username, password), json=sms_data)
+    print(requests.status)
 
 
 class ApplicationView(generics.ListAPIView):

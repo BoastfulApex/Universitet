@@ -6,7 +6,25 @@ from .serializers import *
 from rest_framework.response import Response
 from university.models import Answer, get_random_choice
 import random
-from moderator.views import send_sms
+import requests
+
+
+def send_sms(phone, text):
+    username = 'onlineqabul'
+    password = 'p7LnIrh+-Vw'
+    sms_data = {
+        "messages": [{"recipient": f"{phone}", "message-id": "abc000000003",
+                      "sms": {
+                          "originator": "3700",
+                          "content": {
+                              "text": text}
+                      }
+                      }]
+    }
+    url = "http://91.204.239.44/broker-api/send"
+    res = requests.post(url=url, headers={}, auth=(username, password), json=sms_data)
+    print("AAAAAAAAAAAAAAAA")
+    print(res.status_code)
 
 
 class UserRegistrationPostView(generics.CreateAPIView):
@@ -149,6 +167,11 @@ class TestGenerate(generics.ListCreateAPIView):
             response_data = serializer.data
             response_data['subjects'] = data
             response_data['interval'] = instance.application.type.test_minute
+            text = f"Sizning test yechish manzilingiz: http://tivpi.uz/test/before/{instance.application.user.id}" \
+                   f"?guid={instance.guid}. Toshkent iqtisodiyot va "\
+                   "pedagogika instituti."
+            send_sms(phone=instance.application.user.phone, text=text)
+
             return Response(response_data, status=status.HTTP_201_CREATED)
         else:
             subjects = TestSubject.objects.filter(test=test)
@@ -169,10 +192,6 @@ class TestGenerate(generics.ListCreateAPIView):
                 'subjects': data,
                 'interval': test.application.type.test_minute
             }
-            text = f"Sizning test yechish manzilingiz: http://tivpi.uz/test/before/{test.application.user.id}" \
-                   f"?guid={test.guid}. Toshkent iqtisodiyot va "\
-                   "pedagogika instituti."
-            send_sms(phone=test.application.user.phone, text=text)
             return Response(test_d)
 
 
