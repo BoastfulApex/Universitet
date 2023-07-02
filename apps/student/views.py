@@ -81,11 +81,11 @@ class TestGenerate(generics.ListCreateAPIView):
         try:
             test = Test.objects.get(guid=guid)
             if not test.start_date:
-                test.start_date = datetime.datetime.now()
+                test.start_date = datetime.datetime.now(pytz.timezone('Asia/Tashkent'))
                 test.finish_date = test.start_date + datetime.timedelta(minutes=test.application.type.test_minute)
             test.save()
             remain_date = test.finish_date - datetime.datetime.now(pytz.timezone('Asia/Tashkent'))
-            until = remain_date.total_seconds() // 60
+            until = remain_date.total_seconds() // 60 + 1
             subjects = TestSubject.objects.filter(test=test)
             for subject in subjects:
                 questions_data = []
@@ -183,7 +183,8 @@ class TestGenerate(generics.ListCreateAPIView):
                 'subjects': data,
                 'interval': test.application.type.test_minute
             }
-            text = f"Sizning test yechish manzilingiz: http://tivpi.uz/test/{test.guid}. Toshkent iqtisodiyot va "\
+            text = f"Sizning test yechish manzilingiz: http://tivpi.uz/test/before/{test.application.user.id}" \
+                   f"?guid={test.guid}. Toshkent iqtisodiyot va "\
                    "pedagogika instituti."
             send_sms(phone=test.application.user.phone, text=text)
             return Response(test_d)
@@ -237,6 +238,7 @@ class TestEnd(generics.ListAPIView):
                     'all': subject.wrong_answers + subject.correct_answers,
                 }
                 subjects_d.append(sub)
+                all_ball += subject.ball
             test.application.test_passed = True
             test.application.save()
 
