@@ -167,7 +167,7 @@ class TestGenerate(generics.ListCreateAPIView):
             response_data = serializer.data
             response_data['subjects'] = data
             response_data['interval'] = instance.application.type.test_minute
-            text = f"Sizning test yechish manzilingiz: http://tivpi.uz/test/before/{instance.application.user.id}" \
+            text = f"Sizning test yechish manzilingiz: http://tivpi.uz/test/before/{instance.application.id}" \
                    f"?guid={instance.guid}. Toshkent iqtisodiyot va "\
                    "pedagogika instituti."
             send_sms(phone=instance.application.user.phone, text=text)
