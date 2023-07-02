@@ -9,7 +9,7 @@ class StudentUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['phone', 'full_name']
+        fields = ['phone']
 
 
 class ApplicationSerializer(serializers.ModelSerializer):

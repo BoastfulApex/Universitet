@@ -24,6 +24,7 @@ class Student(models.Model):
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     group = models.ForeignKey('university.Group', on_delete=models.SET_NULL, null=True, blank=True)
+    full_name = models.CharField(_("full name"), max_length=150, blank=True, null=True)
 
     second_phone = models.CharField(max_length=15, null=True, validators=[_validate_phone])
 
@@ -44,6 +45,11 @@ class Student(models.Model):
     academic_certificate = models.ImageField(null=True, blank=True)
     university_license = models.ImageField(null=True, blank=True)
     university_accreditation = models.ImageField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.full_name = self.user.full_name
+        super(Student, self).save(*args, **kwargs)
 
 
 class Application(models.Model):
