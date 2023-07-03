@@ -95,7 +95,7 @@ class ApplicationUpdateView(generics.CreateAPIView):
         application = Application.objects.get(id=request.data['id'])
         application.status = request.data['status']
         text = f"Assalomu alaykum {application.user.full_name}."\
-               " Sizning {application.application_type} uchun qoldirgan arizangiz {application.status}!"
+               f" Sizning {application.application_type} uchun qoldirgan arizangiz {application.status}!"
         if request.data['description']:
             text += f"Sabab: {request.data['description']}"
             application.description = request.data['description']
