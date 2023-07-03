@@ -23,10 +23,9 @@ def send_sms(phone, text):
     }
     url = "http://91.204.239.44/broker-api/send"
     requests.post(url=url, headers={}, auth=(username, password), json=sms_data)
-    print(requests.status)
 
 
-class ApplicationView(generics.ListAPIView):
+class ApplicationView(generics.ListCreateAPIView):
     serializer_class = ApplicationSerializer
     # permission_classes = [permissions.IsAdminUser]
     pagination_class = ApplicationPagination
@@ -94,13 +93,13 @@ class ApplicationUpdateView(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
         application = Application.objects.get(id=request.data['id'])
         application.status = request.data['status']
-        text = f"Assalomu alaykum {application.user.full_name}. Sizning {application.application_type} uchun qoldirgan arizangiz"
-        f" {application.status}!"
+        text = f"Assalomu alaykum {application.user.full_name}."\
+               " Sizning {application.application_type} uchun qoldirgan arizangiz {application.status}!"
         if request.data['description']:
             text += f"Sabab: {request.data['description']}"
             application.description = request.data['description']
         application.save()
-        if application.status == "Tasdiqlandi":
+        if application.application_type != "Konsultatsiya" and application.status == "Tasdiqlandi":
             student, created = Student.objects.get_or_create(user=application.user)
             student.study_type = application.study_type
             student.passport_seria = application.passport_seria
@@ -117,7 +116,7 @@ class ApplicationUpdateView(generics.CreateAPIView):
             student.university_accreditation = application.university_accreditation
             student.group = get_valid_group(application.type)
             student.save()
-        text += "Toshkent iqtisodiyot va pedagogika instituti."
+        text += ""
         send_sms(phone=application.user.phone, text=text)
         return Response({'status': 'edited'})
 
@@ -230,7 +229,7 @@ class GroupDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = GroupsSerializer
 
 
-class StudentView(generics.ListAPIView):
+class StudentView(generics.ListCreateAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentsSerializer
     pagination_class = ApplicationPagination
