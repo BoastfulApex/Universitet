@@ -71,6 +71,7 @@ class ApplicationObjectView(generics.RetrieveUpdateDestroyAPIView):
                     'ball': subject.ball,
                     'correct_answers': subject.correct_answers,
                     'wrong_answers': subject.wrong_answers,
+                    'all_questions': subject.correct_answers + subject.wrong_answers
                 }
                 subjects_d.append(sub)
             test_data = {
