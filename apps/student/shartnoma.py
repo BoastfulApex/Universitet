@@ -6,7 +6,7 @@ from docx.table import _Cell
 from docx.shared import Pt
 
 
-def create_shartnoma(name, id, passport, faculty, number, date, price):
+def create_shartnoma(name, id, passport, faculty, number, date, price, mode):
     COMMAND = "libreoffice --headless --convert-to pdf {doc} --outdir {out}"
 
     # Saqlangan word fileni yoki template wordni o'qivolamiz
@@ -55,6 +55,7 @@ def create_shartnoma(name, id, passport, faculty, number, date, price):
                 .replace("{price}", f"{price}")
                 .replace("{number}", f"+{number}")
                 .replace("{end}", "2027")
+                .replace("{mode}", f"{mode}")
             )
 
         # Word Document da bazab table'lar ham bo'ladi. Ularni paragraphs bilan ololmimiz.
@@ -85,7 +86,6 @@ def create_shartnoma(name, id, passport, faculty, number, date, price):
                             or ("{lang}" in t)
                             or ("{date}" in t)
                     ):
-                        print(t)
                         # Agar qaysidir keyword paragraphning ichida uchrasa uni replace qiladi.
                         cell.text = (
                             cell.text.replace("{id}", "4%06d" % int(f"{id}"))
@@ -97,7 +97,7 @@ def create_shartnoma(name, id, passport, faculty, number, date, price):
                             .replace("{price}", f"{price}")
                             .replace("{number}", f"+{number}")
                             .replace("{end}", "2027")
-                            .replace("{mode}", "Bakalavr")
+                            .replace("{mode}", f"{mode}")
                             .replace("{lang}", "O'zbek")
                             .replace("{end}", "2028")
                         )

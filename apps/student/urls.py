@@ -11,4 +11,7 @@ urlpatterns = [
     path('test/generate/', TestGenerate.as_view(), name='user-test-generate'),
     path('test/finish/', TestEnd.as_view(), name='user-finish'),
     path('test/answer/<int:pk>', StudentTestAnswer.as_view(), name='user-test-answer'),
+
+    path('shartnoma', StudentShartnomaView.as_view(), name='user-shartnoma'),
+
 ]

@@ -241,7 +241,7 @@ class StudentView(generics.ListCreateAPIView):
     pagination_class = ApplicationPagination
     filter_backends = [SearchFilter]
     search_fields = ['user__full_name', 'user__phone', 'passport_seria']
-    permission_classes = [WorkingStudent]
+    # permission_classes = [WorkingStudent]
 
     def get_queryset(self):
         queryset = Student.objects.all()

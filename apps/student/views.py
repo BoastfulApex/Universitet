@@ -264,12 +264,16 @@ class TestEnd(generics.ListAPIView):
 class StudentShartnomaView(generics.CreateAPIView):
     serializer_class = ShartnomaSerializer
 
+    def get_queryset(self):
+        return []
+
     def create(self, request, *args, **kwargs):
-        student = Student.objects.filter(user_finance_id=request.data['user_id']).first()
+        student = Student.objects.filter(id=request.data['user_id']).first()
         if student:
-            today = datetime.today()
+            from datetime import date
+            today = date.today()
             formatted_date = today.strftime('%d/%m/%Y')
-            create_shartnoma(id=student.user_finance_id, name=student.full_name,
+            create_shartnoma(id=student.user_finance_id, name=student.full_name, mode=student.study_type.name,
                              passport=student.passport_seria, faculty=student.faculty.site_name,
                              number=student.user.phone, price=student.type.contract_amount, date=formatted_date)
-            return Response([])
+            return Response({"shartnoma": "http://185.65.202.40:1009/files/res.pdf"})
