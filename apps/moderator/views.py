@@ -327,3 +327,10 @@ class SendMessageView(generics.CreateAPIView):
             for student in students:
                 send_sms(phone=student.user.phone, text=request.data['message'])
         return Response({"status": "Success"})
+
+
+class FinanceFileView(generics.CreateAPIView):
+    serializer_class = FinanceFileSerializer
+
+    def create(self, request, *args, **kwargs):
+        return Response({'status': "finance file added"})

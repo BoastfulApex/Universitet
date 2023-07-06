@@ -4,6 +4,9 @@ from users.models import User
 from university.models import Question, get_random_choice
 from django.core.validators import RegexValidator
 from django.utils.translation import gettext_lazy as _
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+import random
 
 
 NEW, FULL, CONFIRMED, CANCELED, REGISTRATION, TRANSFER, CONSULTATION = (
@@ -23,6 +26,12 @@ class Student(models.Model):
         message="Telefon raqam Xalqaro Formatda 998YYXXXXXXX ko'rinishida kiritilishi kerak!"
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    user_finance_id = models.PositiveIntegerField(
+        default=random.randint(10000, 99999),
+        unique=True,
+        null=True,
+        editable=False,
+    )
     group = models.ForeignKey('university.Group', on_delete=models.SET_NULL, null=True, blank=True)
     full_name = models.CharField(_("full name"), max_length=150, blank=True, null=True)
 

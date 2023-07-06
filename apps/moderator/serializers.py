@@ -106,3 +106,7 @@ class StudentsSerializer(serializers.ModelSerializer):
 class SendMessageSerializer(serializers.Serializer):
     message = serializers.CharField(max_length=2000)
     groups = serializers.ListField(child=serializers.IntegerField())
+
+
+class FinanceFileSerializer(serializers.Serializer):
+    file = serializers.FileField()
