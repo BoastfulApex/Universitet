@@ -9,6 +9,7 @@ from .db_api import *
 import pandas as pd
 from .permission_classes import *
 
+
 def send_sms(phone, text):
     username = 'onlineqabul'
     password = 'p7LnIrh+-Vw'
@@ -333,4 +334,15 @@ class FinanceFileView(generics.CreateAPIView):
     serializer_class = FinanceFileSerializer
 
     def create(self, request, *args, **kwargs):
+        uploaded_file = request.FILES['file']
+        directory = './files/'
+
+        # Construct the file path where the file will be saved
+        file_path = directory + uploaded_file.name
+
+        # Open the destination file in binary mode
+        with open(file_path, 'wb') as destination_file:
+            # Iterate over the uploaded file in chunks
+            for chunk in uploaded_file.chunks():
+                destination_file.write(chunk)
         return Response({'status': "finance file added"})

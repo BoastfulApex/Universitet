@@ -32,7 +32,8 @@ class FacultyType(models.Model):
     name = models.CharField(max_length=500, null=True, blank=True)
     faculty = models.ForeignKey(Faculty, on_delete=models.SET_NULL, null=True)
     description = models.TextField(max_length=5000, null=True, blank=True)
-    description_file = models.FileField(null=True, blank=True)
+    shartnoma_file = models.FileField(null=True, blank=True)
+    malumotnoma_file = models.FileField(null=True, blank=True)
     image = models.ImageField(null=True, blank=True)
     subject1 = models.ForeignKey('university.Subject', on_delete=models.SET_NULL, null=True, blank=True,
                                  related_name='first_subject')
