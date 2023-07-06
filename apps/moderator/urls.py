@@ -22,5 +22,8 @@ urlpatterns = [
     path('group/<int:pk>', GroupDetail.as_view(), name='group-detail'),
     path('students_docs/', StudentsDoc.as_view(), name='students-docs'),
 
+    path('create_moderator/', ModeratorView.as_view(), name='create_moderator'),
+    path('send_message/', SendMessageView.as_view(), name='send_message_groups'),
+
 ]
 

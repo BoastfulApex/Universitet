@@ -7,7 +7,7 @@ import requests
 from student .models import Test, TestSubject, Student
 from .db_api import *
 import pandas as pd
-
+from .permission_classes import *
 
 def send_sms(phone, text):
     username = 'onlineqabul'
@@ -27,7 +27,7 @@ def send_sms(phone, text):
 
 class ApplicationView(generics.ListCreateAPIView):
     serializer_class = ApplicationSerializer
-    # permission_classes = [permissions.IsAdminUser]
+    permission_classes = [WorkingApplicant]
     pagination_class = ApplicationPagination
 
     def get_queryset(self):
@@ -52,7 +52,7 @@ class ApplicationView(generics.ListCreateAPIView):
 class ApplicationObjectView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
-    # permission_classes = [permissions.IsAdminUser]
+    permission_classes = [WorkingApplicant]
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -89,7 +89,7 @@ class ApplicationObjectView(generics.RetrieveUpdateDestroyAPIView):
 
 class ApplicationUpdateView(generics.CreateAPIView):
     serializer_class = ApplicationUpdateSerializer
-    # permission_classes = [permissions.IsAdminUser]
+    permission_classes = [WorkingApplicant]
 
     def post(self, request, *args, **kwargs):
         application = Application.objects.get(id=request.data['id'])
@@ -125,30 +125,30 @@ class ApplicationUpdateView(generics.CreateAPIView):
 class StudyTypeView(generics.ListCreateAPIView):
     queryset = StudyType.objects.all()
     serializer_class = StudyTypeSerializer
-    # permission_classes = [permissions.IsAdminUser]
+    permission_classes = [CreateGroupFacultyType]
 
 
 class StudyTypeObjectView(generics.RetrieveUpdateDestroyAPIView):
     queryset = StudyType.objects.all()
     serializer_class = StudyTypeSerializer
-    # permission_classes = [permissions.IsAdminUser]
+    permission_classes = [CreateGroupFacultyType]
 
 
 class FacultyView(generics.ListCreateAPIView):
     queryset = Faculty.objects.all()
     serializer_class = FacultySerializer
-    # permission_classes = [permissions.IsAdminUser]
+    permission_classes = [CreateGroupFacultyType]
 
 
 class FacultyObjectView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Faculty.objects.all()
     serializer_class = FacultySerializer
-    # permission_classes = [permissions.IsAdminUser]
+    permission_classes = [CreateGroupFacultyType]
 
 
 class FacultyTypeView(generics.ListCreateAPIView):
     serializer_class = FacultyTypeSerializer
-    # permission_classes = [permissions.IsAdminUser]
+    permission_classes = [CreateGroupFacultyType]
 
     def get_queryset(self):
         queryset = FacultyType.objects.all()
@@ -162,22 +162,24 @@ class FacultyTypeView(generics.ListCreateAPIView):
 class FacultyTypeObjectView(generics.RetrieveUpdateDestroyAPIView):
     queryset = FacultyType.objects.all()
     serializer_class = FacultyTypeSerializer
-    # permission_classes = [permissions.IsAdminUser]
+    permission_classes = [CreateGroupFacultyType]
 
 
 class SubjectView(generics.ListCreateAPIView):
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
-    # permission_classes = [permissions.IsAdminUser]
+    permission_classes = [CreateSubjectTest]
 
 
 class SubjectDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
+    permission_classes = [CreateSubjectTest]
 
 
 class ListQuestionAPIView(generics.ListAPIView):
     serializer_class = QuestionSerializer
+    permission_classes = [CreateSubjectTest]
 
     def get_queryset(self):
         try:
@@ -211,6 +213,7 @@ class ListQuestionAPIView(generics.ListAPIView):
 class GroupView(generics.ListCreateAPIView):
     queryset = Group.objects.all()
     serializer_class = GroupsSerializer
+    # permission_classes = [CreateGroupFacultyType]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -228,6 +231,7 @@ class GroupView(generics.ListCreateAPIView):
 class GroupDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Group.objects.all()
     serializer_class = GroupsSerializer
+    permission_classes = [CreateGroupFacultyType, EditGroup]
 
 
 class StudentView(generics.ListCreateAPIView):
@@ -236,6 +240,7 @@ class StudentView(generics.ListCreateAPIView):
     pagination_class = ApplicationPagination
     filter_backends = [SearchFilter]
     search_fields = ['user__full_name', 'user__phone', 'passport_seria']
+    permission_classes = [WorkingStudent]
 
     def get_queryset(self):
         queryset = Student.objects.all()
@@ -249,10 +254,12 @@ class StudentView(generics.ListCreateAPIView):
 class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentsSerializer
+    permission_classes = [WorkingStudent]
 
 
 class StudentsDoc(generics.ListAPIView):
     serializer_class = StudentsSerializer
+    permission_classes = [WorkingStudent]
 
     def get_queryset(self):
         queryset = Student.objects.all()
@@ -302,3 +309,23 @@ class AnswerView(generics.ListAPIView):
 
     def get_queryset(self):
         return Answer.objects.all()
+
+
+class ModeratorView(generics.ListCreateAPIView):
+    queryset = Moderator.objects.all()
+    serializer_class = ModeratorSerializer
+
+
+class SendMessageView(generics.CreateAPIView):
+    serializer_class = SendMessageSerializer
+
+    def create(self, request, *args, **kwargs):
+        my_list = request.data['groups']
+        groups = Group.objects.filter(id__in=my_list).all()
+        for group in groups:
+            print(group.name)
+            students = Student.objects.filter(group=group).all()
+            print(students)
+            for student in students:
+                send_sms(phone=student.user.phone, text=request.data['message'])
+        return Response({"status": "Success"})

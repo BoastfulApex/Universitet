@@ -11,13 +11,13 @@ class UserManager(BaseUserManager):
         if phone is None:
             raise TypeError('Users must have an phone.')
 
-        user = self.model(email=phone,**kwargs)
+        user = self.model(phone=phone, **kwargs)
         user.set_password("123")
         user.save()
 
         return user
 
-    def create_superuser(self, phone, password):
+    def create_superuser(self, phone, password, name):
         """
         Create and return a `User` with superuser (admin) permissions.
         """
@@ -36,8 +36,7 @@ class UserManager(BaseUserManager):
             raise ValueError('Users must have an phone.')
 
         user = self.model(
-            first_name='Super',
-            last_name='User',
+            full_name=name,
             phone=phone,
             is_staff=True,
             is_superuser=True,

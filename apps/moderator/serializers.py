@@ -3,6 +3,7 @@ from university.serializers import *
 from users.serializers import *
 from student.serializers import *
 from university.models import Group
+from .models import *
 
 
 class StudentUserSerializer(serializers.ModelSerializer):
@@ -10,6 +11,34 @@ class StudentUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['phone']
+
+
+class ModeratorUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['phone', 'full_name', 'password']
+
+
+class ModeratorSerializer(serializers.ModelSerializer):
+    user = ModeratorUserSerializer()
+
+    class Meta:
+        model = Moderator
+        fields = '__all__'
+
+    def create(self, validated_data):
+        user_data = validated_data.pop('user')
+        password = user_data.pop('password')
+        phone = user_data.pop('phone')
+        name = user_data.pop('full_name')
+        # Create the User instance
+        user = User.objects.create_superuser(phone=phone, password=password, name=name)
+
+        # Create the Moderator instance
+        moderator = Moderator.objects.create(user=user, **validated_data)
+
+        return moderator
 
 
 class ApplicationSerializer(serializers.ModelSerializer):
@@ -73,3 +102,7 @@ class StudentsSerializer(serializers.ModelSerializer):
 
         return super().update(instance, validated_data)
 
+
+class SendMessageSerializer(serializers.Serializer):
+    message = serializers.CharField(max_length=2000)
+    groups = serializers.ListField(child=serializers.IntegerField())
