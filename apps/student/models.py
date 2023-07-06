@@ -28,7 +28,6 @@ class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     user_finance_id = models.PositiveIntegerField(
         default=random.randint(10000, 99999),
-        unique=True,
         null=True,
         editable=False,
     )
