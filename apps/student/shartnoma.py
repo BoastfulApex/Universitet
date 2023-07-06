@@ -126,6 +126,4 @@ def create_shartnoma(name, id, passport, faculty, number, date, price, mode):
 
     # File o'zgartirilgandan keyingi holatini file ga yoki On Memory file ga saqlab olamiz
     doc.save(res)
-    out = './files/'
-    docx = './files/res.docx'
-    os.system(COMMAND.format(doc=docx, out=out))
+    os.system("abiword --to=pdf" + str(" ") + "./files/res.docx")
