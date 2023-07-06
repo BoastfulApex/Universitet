@@ -317,6 +317,11 @@ class ModeratorView(generics.ListCreateAPIView):
     serializer_class = ModeratorSerializer
 
 
+class ModeratorDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Moderator.objects.all()
+    serializer_class = ModeratorSerializer
+
+
 class SendMessageView(generics.CreateAPIView):
     serializer_class = SendMessageSerializer
 

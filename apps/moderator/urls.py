@@ -23,6 +23,7 @@ urlpatterns = [
     path('students_docs/', StudentsDoc.as_view(), name='students-docs'),
 
     path('create_moderator/', ModeratorView.as_view(), name='create_moderator'),
+    path('create_moderator/<int:pk>', ModeratorDetailView.as_view(), name='create_moderator_detail'),
     path('send_message/', SendMessageView.as_view(), name='send_message_groups'),
 
     path('finance_file/', FinanceFileView.as_view(), name='finance_file'),
