@@ -45,7 +45,12 @@ INSTALLED_APPS = [
     'users',
     'university',
     'moderator',
-    'student'
+    'student',
+
+
+    # Custom App for bot
+
+    'bot'
 ]
 
 MIDDLEWARE = [
