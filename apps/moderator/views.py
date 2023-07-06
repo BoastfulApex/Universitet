@@ -327,6 +327,9 @@ class SendMessageView(generics.CreateAPIView):
             students = Student.objects.filter(group=group).all()
             for student in students:
                 send_sms(phone=student.user.phone, text=request.data['message'])
+        if request.data['student_id']:
+            student = Student.objects.filter(id=id).first()
+            send_sms(phone=student.user.phone, text=request.data['message'])
         return Response({"status": "Success"})
 
 
@@ -335,14 +338,18 @@ class FinanceFileView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         uploaded_file = request.FILES['file']
-        directory = './files/'
-
-        # Construct the file path where the file will be saved
-        file_path = directory + uploaded_file.name
-
-        # Open the destination file in binary mode
-        with open(file_path, 'wb') as destination_file:
-            # Iterate over the uploaded file in chunks
+        with open('./files/xisobot.xlsx', 'wb') as destination_file:
             for chunk in uploaded_file.chunks():
                 destination_file.write(chunk)
+        file_path = open('./files/xisobot.xlsx', 'rb')
+        df = pd.read_excel(file_path)
+
+        for i in df.index:
+            student = Student.objects.filter(student_finance_id=df['Студент'][i]).first()
+            if student:
+                pay = StudentFinence.objects.create(
+                    student=student,
+                    summa=int(df['Оборот керидит'][i])
+                )
+                pay.save()
         return Response({'status': "finance file added"})

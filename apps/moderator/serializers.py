@@ -107,6 +107,7 @@ class StudentsSerializer(serializers.ModelSerializer):
 
 class SendMessageSerializer(serializers.Serializer):
     message = serializers.CharField(max_length=2000)
+    student_id = serializers.CharField(max_length=200, required=False)
     groups = serializers.ListField(child=serializers.IntegerField())
 
 

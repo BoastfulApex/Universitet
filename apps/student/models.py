@@ -143,3 +143,9 @@ class TestSubject(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
+
+
+class StudentFinance(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, blank=True)
+    date = models.DateField(auto_now_add=True)
+    summa = models.PositiveIntegerField()
