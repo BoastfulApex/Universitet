@@ -322,6 +322,7 @@ class SendMessageView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         my_list = request.data['groups']
+        print(my_list)
         groups = Group.objects.filter(id__in=my_list).all()
         for group in groups:
             students = Student.objects.filter(group=group).all()
