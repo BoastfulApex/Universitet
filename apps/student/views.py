@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from university.models import Answer, get_random_choice
 import random
 import requests
+from .shartnoma import create_shartnoma
 
 
 def send_sms(phone, text):
@@ -257,4 +258,18 @@ class TestEnd(generics.ListAPIView):
             }
             return Response(data)
         else:
+            return Response([])
+
+
+class StudentShartnomaView(generics.CreateAPIView):
+    serializer_class = ShartnomaSerializer
+
+    def create(self, request, *args, **kwargs):
+        student = Student.objects.filter(user_finance_id=request.data['user_id']).first()
+        if student:
+            today = datetime.today()
+            formatted_date = today.strftime('%d/%m/%Y')
+            create_shartnoma(id=student.user_finance_id, name=student.full_name,
+                             passport=student.passport_seria, faculty=student.faculty.site_name,
+                             number=student.user.phone, price=student.type.contract_amount, date=formatted_date)
             return Response([])

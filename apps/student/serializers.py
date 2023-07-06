@@ -61,3 +61,5 @@ class StudentAnswerSerializer(serializers.ModelSerializer):
         fields = ['id', 'student_answer']
 
 
+class ShartnomaSerializer(serializers.Serializer):
+    user_id = serializers.CharField(max_length=100)

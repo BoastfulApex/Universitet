@@ -361,3 +361,4 @@ class FinanceFileView(generics.CreateAPIView):
                 )
                 pay.save()
         return Response({'status': "finance file added"})
+
