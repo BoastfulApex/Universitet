@@ -37,6 +37,15 @@ class User(AbstractUser):
     telegram_id = models.CharField(max_length=100, null=True, blank=True)
     otp = models.CharField(max_length=10, null=True, blank=True)
 
+    super_admin = models.BooleanField(default=False)
+    create_group_faculty_type = models.BooleanField(default=False)
+    create_subject = models.BooleanField(default=False)
+    working_with_applicant = models.BooleanField(default=False)
+    working_with_student = models.BooleanField(default=False)
+    send_message = models.BooleanField(default=False)
+    edit_group = models.BooleanField(default=False)
+    finance = models.BooleanField(default=False)
+
     USERNAME_FIELD = "phone"
     REQUIRED_FIELDS = []
 

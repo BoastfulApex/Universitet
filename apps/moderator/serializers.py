@@ -17,7 +17,7 @@ class ModeratorUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['phone', 'full_name', 'password']
+        fields = '__all__'
 
 
 class ModeratorSerializer(serializers.ModelSerializer):
