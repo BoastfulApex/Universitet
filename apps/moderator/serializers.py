@@ -75,7 +75,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ['id', 'question', 'image', 'is_correct']
+        fields = ['id', 'question', 'image']
 
 
 class GroupsSerializer(serializers.ModelSerializer):

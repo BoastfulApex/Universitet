@@ -323,9 +323,7 @@ class SendMessageView(generics.CreateAPIView):
         my_list = request.data['groups']
         groups = Group.objects.filter(id__in=my_list).all()
         for group in groups:
-            print(group.name)
             students = Student.objects.filter(group=group).all()
-            print(students)
             for student in students:
                 send_sms(phone=student.user.phone, text=request.data['message'])
         return Response({"status": "Success"})
