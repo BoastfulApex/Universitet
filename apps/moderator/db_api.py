@@ -6,7 +6,7 @@ from moderator.models import *
 def get_valid_group_name(faculty_type):
     i = 1
     while True:
-        group = Group.objects.filter(name=f"{faculty_type.group_name}-{i}")
+        group = Group.objects.filter(course="1-Kurs", name=f"{faculty_type.group_name}-{i}")
         if not group:
             return f"{faculty_type.group_name}-{i}"
             break
@@ -19,7 +19,7 @@ def get_group_students_value(group):
 
 
 def get_valid_group(faculty_type):
-    group = Group.objects.filter(faculty_type=faculty_type).last()
+    group = Group.objects.filter(faculty_type=faculty_type, course="1-Kurs").last()
     if not group and group.students <= get_group_students_value(group):
         group = Group.objects.create(
             faculty_type=faculty_type,

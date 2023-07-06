@@ -138,9 +138,24 @@ class Subject(models.Model):
             self.delete()
 
 
+kurs1, kurs2, kurs3, kurs4 = (
+    "1-Kurs",
+    "2-Kurs",
+    "3-Kurs",
+    "4-Kurs",
+)
+
+
 class Group(models.Model):
+    COURSE_CHOICE = (
+        (kurs1, kurs1),
+        (kurs2, kurs2),
+        (kurs3, kurs3),
+        (kurs4, kurs4),
+    )
     name = models.CharField(max_length=1000)
     students = models.IntegerField(default=0)
+    course = models.CharField(max_length=100, choices=COURSE_CHOICE, default=kurs1)
     faculty_type = models.ForeignKey(FacultyType, on_delete=models.CASCADE, null=True)
     faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE, null=True)
 
