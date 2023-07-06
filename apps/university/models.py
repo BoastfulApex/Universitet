@@ -51,6 +51,9 @@ class FacultyType(models.Model):
     group_students = models.IntegerField(default=0)
     contract_amount = models.IntegerField(default=0)
 
+    first_quarter = models.DateField(null=True)
+    second_quarter = models.DateField(null=True)
+
     def __str__(self):
         try:
             return f"{self.name}"
