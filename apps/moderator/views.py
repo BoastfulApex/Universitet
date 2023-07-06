@@ -338,10 +338,10 @@ class FinanceFileView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         uploaded_file = request.FILES['file']
-        with open('./files/xisobot.xlsx', 'wb') as destination_file:
+        with open('./files/xisobot-finance.xlsx', 'wb') as destination_file:
             for chunk in uploaded_file.chunks():
                 destination_file.write(chunk)
-        file_path = open('./files/xisobot.xlsx', 'rb')
+        file_path = open('./files/xisobot-finance.xlsx', 'rb')
         df = pd.read_excel(file_path)
 
         for i in df.index:
