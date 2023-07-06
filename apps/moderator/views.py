@@ -328,8 +328,9 @@ class SendMessageView(generics.CreateAPIView):
             for student in students:
                 send_sms(phone=student.user.phone, text=request.data['message'])
         if request.data['student_id']:
-            student = Student.objects.filter(id=id).first()
-            send_sms(phone=student.user.phone, text=request.data['message'])
+            student = Student.objects.filter(id=request.data['student_id']).first()
+            if student:
+                send_sms(phone=student.user.phone, text=request.data['message'])
         return Response({"status": "Success"})
 
 
