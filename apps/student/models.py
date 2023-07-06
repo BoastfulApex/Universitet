@@ -26,11 +26,12 @@ class Student(models.Model):
         message="Telefon raqam Xalqaro Formatda 998YYXXXXXXX ko'rinishida kiritilishi kerak!"
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
-    # user_finance_id = models.PositiveIntegerField(
-    #     default=random.randint(10000, 99999),
-    #     null=True,
-    #     editable=False,
-    # )
+    user_finance_id = models.PositiveIntegerField(
+        default=random.randint(10000, 99999),
+        unique=True,
+        null=True,
+        editable=False,
+    )
     group = models.ForeignKey('university.Group', on_delete=models.SET_NULL, null=True, blank=True)
     full_name = models.CharField(_("full name"), max_length=150, blank=True, null=True)
 

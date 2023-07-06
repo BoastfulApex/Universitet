@@ -40,6 +40,7 @@ class UserManager(BaseUserManager):
             phone=phone,
             is_staff=True,
             is_superuser=True,
+            super_admin=True,
 
         )
 
