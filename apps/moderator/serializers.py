@@ -33,7 +33,9 @@ class ModeratorSerializer(serializers.ModelSerializer):
         phone = user_data.pop('phone')
         name = user_data.pop('full_name')
         # Create the User instance
-        user = User.objects.create_superuser(phone=phone, password=password, name=name)
+        user = User.objects.create_superuser(phone=phone, password=password)
+        user.full_name=name
+        user.save()
 
         # Create the Moderator instance
         moderator = Moderator.objects.create(user=user, **validated_data)

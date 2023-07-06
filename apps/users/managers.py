@@ -17,7 +17,7 @@ class UserManager(BaseUserManager):
 
         return user
 
-    def create_superuser(self, phone, password, name):
+    def create_superuser(self, phone, password):
         """
         Create and return a `User` with superuser (admin) permissions.
         """
@@ -36,7 +36,6 @@ class UserManager(BaseUserManager):
             raise ValueError('Users must have an phone.')
 
         user = self.model(
-            full_name=name,
             phone=phone,
             is_staff=True,
             is_superuser=True,
