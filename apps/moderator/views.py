@@ -362,3 +362,38 @@ class FinanceFileView(generics.CreateAPIView):
                 pay.save()
         return Response({'status': "finance file added"})
 
+
+class DashboardView(generics.ListAPIView):
+    def get_queryset(self):
+        return []
+
+    def list(self, request, *args, **kwargs):
+        register_application = Application.objects.all()
+        groups = Group.objects.all()
+        faculty = Faculty.objects.all()
+        faculty_type = FacultyType.objects.all()
+        students = Student.objects.all()
+        confirmed_applications = Application.objects.filter(status='Tasdiqlandi').all()
+        canceled_applications = Application.objects.filter(status='Rad etildi').all()
+        all_pays = StudentFinance.objects.all()
+        pays = [pay['summa'] for pay in all_pays]
+        payed_1 = 0
+        payed_2 = 0
+        not_payed_1 = 0
+        not_payed_2 = 0
+        return Response(
+            {
+                'applications': len(register_application),
+                'confirmed_applications': len(confirmed_applications),
+                'canceled_applications': len(canceled_applications),
+                'pays': sum(pays),
+                'students': len(students),
+                'faculty_type': len(faculty_type),
+                'groups': len(groups),
+                'faculty': len(faculty),
+                'payed_1': payed_1,
+                'payed_2': payed_2,
+                'not_payed_1': not_payed_1,
+                'not_payed_2': not_payed_2,
+            }
+        )
