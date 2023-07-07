@@ -353,7 +353,7 @@ class FinanceFileView(generics.CreateAPIView):
         df = pd.read_excel(file_path)
 
         for i in df.index:
-            student = Student.objects.filter(student_finance_id=df['Студент'][i]).first()
+            student = Student.objects.filter(user_finance_id=df['Студент'][i]).first()
             if student:
                 pay = StudentFinence.objects.create(
                     student=student,
