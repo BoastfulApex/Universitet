@@ -50,7 +50,7 @@ INSTALLED_APPS = [
 
     # Custom App for bot
 
-    'bot'
+    'bot',
 ]
 
 MIDDLEWARE = [

@@ -34,20 +34,25 @@ class FacultyType(models.Model):
     description = models.TextField(max_length=5000, null=True, blank=True)
     description_file = models.FileField(null=True, blank=True)
     image = models.ImageField(null=True, blank=True)
-    subject1 = models.ForeignKey('university.Subject', on_delete=models.SET_NULL, null=True, blank=True,
+    'university.models.Subject'
+    subject1: "Subject" = models.ForeignKey('university.Subject', on_delete=models.SET_NULL, null=True, blank=True,
                                  related_name='first_subject')
-    subject2 = models.ForeignKey('university.Subject', on_delete=models.SET_NULL, null=True, blank=True,
+    subject2: "Subject" = models.ForeignKey('university.Subject', on_delete=models.SET_NULL, null=True, blank=True,
                                  related_name='second_subject')
-    subject3 = models.ForeignKey('university.Subject', on_delete=models.SET_NULL, null=True, blank=True,
+    subject3: "Subject" = models.ForeignKey('university.Subject', on_delete=models.SET_NULL, null=True, blank=True,
                                  related_name='third_subject')
-    subject4 = models.ForeignKey('university.Subject', on_delete=models.SET_NULL, null=True, blank=True,
+    subject4: "Subject" = models.ForeignKey('university.Subject', on_delete=models.SET_NULL, null=True, blank=True,
                                  related_name='fourth_subject')
-    subject5 = models.ForeignKey('university.Subject', on_delete=models.SET_NULL, null=True, blank=True,
+    subject5: "Subject" = models.ForeignKey('university.Subject', on_delete=models.SET_NULL, null=True, blank=True,
                                  related_name='fifth_subject')
     passing_score = models.IntegerField(default=0)
+
     test_minute = models.IntegerField(default=0)
+    
     group_name = models.CharField(max_length=1000, null=True, blank=True)
+
     group_students = models.IntegerField(default=0)
+
     contract_amount = models.IntegerField(default=0)
 
     def __str__(self):
@@ -57,6 +62,7 @@ class FacultyType(models.Model):
             return f"{self.id}"
 
     def check_privilege(self):
+        all()
         if self.subject1:
             return False
         if self.subject2:
@@ -72,8 +78,15 @@ class FacultyType(models.Model):
 
 class Question(models.Model):
     question = models.CharField(max_length=5000, null=True, blank=True)
-    subject = models.ForeignKey('university.Subject', on_delete=models.CASCADE, null=True)
+    subject: "Subject" = models.ForeignKey('university.Subject', on_delete=models.CASCADE, null=True)
     image = models.ImageField(null=True, blank=True)
+
+    @property
+    def variants(self):
+        variants = list(Answer.objects.filter(
+            question=self
+        ).order_by("?"))
+        return variants
 
 
 class Answer(models.Model):
@@ -97,7 +110,7 @@ class Subject(models.Model):
             return f"{self.id}"
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
+        res = super().save(*args, **kwargs)
 
         if self.test_file:
             try:
@@ -132,9 +145,13 @@ class Subject(models.Model):
                             image.save(image_path)
                             answer.answer_image = image_path
                         answer.save()
-            except:
+                return res
+            except Exception as e:
+                print(e)
+                print("Delete 2")
                 self.delete()
         else:
+            print("Delete")
             self.delete()
 
 
