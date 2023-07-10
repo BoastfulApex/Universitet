@@ -62,4 +62,4 @@ class StudentAnswerSerializer(serializers.ModelSerializer):
 
 
 class ShartnomaSerializer(serializers.Serializer):
-    user_id = serializers.CharField(max_length=100)
+    passport = serializers.CharField(max_length=100)

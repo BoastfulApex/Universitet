@@ -28,7 +28,7 @@ def send_sms(phone, text):
 
 class ApplicationView(generics.ListCreateAPIView):
     serializer_class = ApplicationSerializer
-    permission_classes = [WorkingApplicant]
+    # permission_classes = [WorkingApplicant]
     pagination_class = ApplicationPagination
 
     def get_queryset(self):
@@ -90,7 +90,7 @@ class ApplicationObjectView(generics.RetrieveUpdateDestroyAPIView):
 
 class ApplicationUpdateView(generics.CreateAPIView):
     serializer_class = ApplicationUpdateSerializer
-    permission_classes = [WorkingApplicant]
+    # permission_classes = [WorkingApplicant]
 
     def post(self, request, *args, **kwargs):
         application = Application.objects.get(id=request.data['id'])
@@ -149,7 +149,7 @@ class FacultyObjectView(generics.RetrieveUpdateDestroyAPIView):
 
 class FacultyTypeView(generics.ListCreateAPIView):
     serializer_class = FacultyTypeSerializer
-    permission_classes = [CreateGroupFacultyType]
+    # permission_classes = [CreateGroupFacultyType]
 
     def get_queryset(self):
         queryset = FacultyType.objects.all()
@@ -163,7 +163,7 @@ class FacultyTypeView(generics.ListCreateAPIView):
 class FacultyTypeObjectView(generics.RetrieveUpdateDestroyAPIView):
     queryset = FacultyType.objects.all()
     serializer_class = FacultyTypeSerializer
-    permission_classes = [CreateGroupFacultyType]
+    # permission_classes = [CreateGroupFacultyType]
 
 
 class SubjectView(generics.ListCreateAPIView):

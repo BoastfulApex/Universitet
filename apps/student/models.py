@@ -149,3 +149,11 @@ class StudentFinance(models.Model):
     student = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, blank=True)
     date = models.DateField(auto_now_add=True)
     summa = models.PositiveIntegerField()
+
+
+class Agreement(models.Model):
+
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    agreement_file = models.FileField(null=True, upload_to='./agreements/')
+    file_path = models.CharField(null=True, max_length=2000)
+

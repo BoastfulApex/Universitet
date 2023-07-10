@@ -4,13 +4,16 @@ from docx.api import Document
 from docx.document import Document as Doc
 from docx.table import _Cell
 from docx.shared import Pt
+from docx2pdf import convert
+import qrcode
+from docx.shared import Cm
 
 
-def create_shartnoma(name, id, passport, faculty, number, date, price, mode):
+def create_shartnoma(name, id, passport, faculty, number, date, price, mode, template):
     COMMAND = "libreoffice --headless --convert-to pdf {doc} --outdir {out}"
 
     # Saqlangan word fileni yoki template wordni o'qivolamiz
-    word_file = open("./files/Shartnoma.docx", "rb")
+    word_file = open(f".{template}", "rb")
 
     # Ochilgan fileni Word document sifatida ochvoamiz
     doc: Doc = Document(word_file)
@@ -18,8 +21,9 @@ def create_shartnoma(name, id, passport, faculty, number, date, price, mode):
     # Natija uchun `On Memory` file ochib olamiz bu faqat ramda yani hotirada saqlanadi
     # open("res.docx","wb") qilib ochsaham bo'ladi. Bunda file diskga yoziladi.
     #
-    res = open("./files/res.docx", "wb")
-
+    res = open(f"./files/agreements/{id}.docx", "wb")
+    q = qrcode.make(f'http://185.65.202.40:1009/files/agreements/{id}.docx')
+    q.save('./files/qrcode.png')
     # Word fileni ichida har bir elementni paragraphs orqali olib uni forloopga qo'yamiz
     for paragraph in doc.paragraphs:
         # paragraphni ichidigi text olib olamiz
@@ -42,7 +46,6 @@ def create_shartnoma(name, id, passport, faculty, number, date, price, mode):
                 or ("{date}" in t)
                 or ("{price}" in t)
         ):
-            print(t)
             # Agar qaysidir keyword paragraphning ichida uchrasa uni replace qiladi.
             paragraph.text = (
                 paragraph.text.replace("{id}", "4%06d" % int(f"{id}"))
@@ -104,6 +107,11 @@ def create_shartnoma(name, id, passport, faculty, number, date, price, mode):
 
     # Iterate over paragraphs
     for paragraph in doc.paragraphs:
+        if '{qr}' in paragraph.text:
+            paragraph.text = paragraph.text.replace('{qr}', "")
+            run = paragraph.add_run()
+            run.add_picture(f'./files/qrcode.png', width=Cm(3))
+
         # Access the runs within the paragraph
         for run in paragraph.runs:
             # Modify the font properties
@@ -126,4 +134,5 @@ def create_shartnoma(name, id, passport, faculty, number, date, price, mode):
 
     # File o'zgartirilgandan keyingi holatini file ga yoki On Memory file ga saqlab olamiz
     doc.save(res)
-    os.system("abiword --to=pdf" + str(" ") + "./files/res.docx")
+    # convert(f'./agreements/{id}.docx', f'./agreements/{id}.pdf')
+    os.system(f"libreoffice --headless --convert-to pdf ./files/agreements/{id}.docx --outdir ./files/agreements/{id}.pdf")

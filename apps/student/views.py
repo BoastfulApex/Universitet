@@ -8,6 +8,7 @@ from university.models import Answer, get_random_choice
 import random
 import requests
 from .shartnoma import create_shartnoma
+from django.core.files import File
 
 
 def send_sms(phone, text):
@@ -169,7 +170,7 @@ class TestGenerate(generics.ListCreateAPIView):
             response_data['subjects'] = data
             response_data['interval'] = instance.application.type.test_minute
             text = f"Sizning test yechish manzilingiz: http://tivpi.uz/test/before/{instance.application.id}" \
-                   f"?guid={instance.guid}. Toshkent iqtisodiyot va "\
+                   f"?guid={instance.guid}. Toshkent iqtisodiyot va " \
                    "pedagogika instituti."
             send_sms(phone=instance.application.user.phone, text=text)
 
@@ -268,12 +269,21 @@ class StudentShartnomaView(generics.CreateAPIView):
         return []
 
     def create(self, request, *args, **kwargs):
-        student = Student.objects.filter(id=request.data['user_id']).first()
+        student = Student.objects.filter(passport_seria=request.data['passport']).first()
         if student:
-            from datetime import date
-            today = date.today()
-            formatted_date = today.strftime('%d/%m/%Y')
-            create_shartnoma(id=student.user_finance_id, name=student.full_name, mode=student.study_type.name,
-                             passport=student.passport_seria, faculty=student.faculty.site_name,
-                             number=student.user.phone, price=student.type.contract_amount, date=formatted_date)
-            return Response({"shartnoma": "http://185.65.202.40:1009/files/res.pdf"})
+            agreement = Agreement.objects.filter(student=student).first()
+            if not agreement:
+                from datetime import date
+                today = date.today()
+                formatted_date = today.strftime('%d.%m.%Y')
+                template = student.type.shartnoma_file.url
+                create_shartnoma(id=student.user_finance_id, name=student.full_name, mode=student.study_type.name,
+                                 passport=student.passport_seria, faculty=student.faculty.site_name, template=template,
+                                 number=student.user.phone, price=student.type.contract_amount, date=formatted_date)
+                agreement = Agreement.objects.create(
+                    student=student,
+                )
+                agreement.file_path = f'http://185.65.202.40:1009/files/agreements/{student.user_finance_id}.docx'
+                agreement.save()
+            print(agreement.id)
+            return Response({"shartnoma": agreement.file_path})
