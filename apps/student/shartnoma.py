@@ -59,6 +59,7 @@ def create_shartnoma(name, id, passport, faculty, number, date, price, mode, tem
                 .replace("{number}", f"+{number}")
                 .replace("{end}", "2027")
                 .replace("{mode}", f"{mode}")
+                .replace("{delta}", f"{4}")
             )
 
         # Word Document da bazab table'lar ham bo'ladi. Ularni paragraphs bilan ololmimiz.
@@ -91,7 +92,7 @@ def create_shartnoma(name, id, passport, faculty, number, date, price, mode, tem
                     ):
                         # Agar qaysidir keyword paragraphning ichida uchrasa uni replace qiladi.
                         cell.text = (
-                            cell.text.replace("{id}", "4%06d" % int(f"{id}"))
+                            cell.text.replace("{id}", f"{id}")
                             .replace("{name}", f"{name}")
                             .replace("{address}", f"")
                             .replace("{passport}", f"{passport}")
@@ -102,7 +103,7 @@ def create_shartnoma(name, id, passport, faculty, number, date, price, mode, tem
                             .replace("{end}", "2027")
                             .replace("{mode}", f"{mode}")
                             .replace("{lang}", "O'zbek")
-                            .replace("{end}", "2028")
+                            .replace("{end}", "2027")
                         )
 
     # Iterate over paragraphs
@@ -135,4 +136,4 @@ def create_shartnoma(name, id, passport, faculty, number, date, price, mode, tem
     # File o'zgartirilgandan keyingi holatini file ga yoki On Memory file ga saqlab olamiz
     doc.save(res)
     # convert(f'./agreements/{id}.docx', f'./agreements/{id}.pdf')
-    os.system(f"libreoffice --headless --convert-to pdf ./files/agreements/{id}.docx --outdir ./files/agreements/{id}.pdf")
+    os.system(f"libreoffice --headless --convert-to pdf ./files/agreements/{id}.docx --outdir ./files/agreements")

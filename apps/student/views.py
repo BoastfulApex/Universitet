@@ -283,7 +283,7 @@ class StudentShartnomaView(generics.CreateAPIView):
                 agreement = Agreement.objects.create(
                     student=student,
                 )
-                agreement.file_path = f'http://185.65.202.40:1009/files/agreements/{student.user_finance_id}.docx'
+                agreement.file_path = f'http://185.65.202.40:1009/files/agreements/{student.user_finance_id}.pdf'
                 agreement.save()
             print(agreement.id)
             return Response({"shartnoma": agreement.file_path})
