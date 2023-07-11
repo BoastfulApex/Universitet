@@ -259,7 +259,7 @@ class StudentView(generics.ListCreateAPIView):
                 student_pays = [pay.summa for pay in StudentFinance.objects.filter(student=student).all()]
                 if sum(student_pays) >= (student.type.contract_amount1 + student.type.contract_amount2):
                     response_students.append(student)
-                    queryset = response_students
+            queryset = response_students
         if pay_type == "not_payed":
             for student in queryset:
                 student_pays = [pay.summa for pay in StudentFinance.objects.filter(student=student).all()]
@@ -270,7 +270,7 @@ class StudentView(generics.ListCreateAPIView):
             for student in queryset:
                 from datetime import date
                 today = date.today()
-                if student.type.first_quarter - today < 10 or student.type.second_quarter:
+                if student.type.first_quarter - today < 10:
                     response_students.append(student)
             queryset = response_students
         return queryset
