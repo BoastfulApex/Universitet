@@ -409,7 +409,7 @@ class DashboardView(generics.ListAPIView):
         for student in students:
             student_pays = [pay.summa for pay in StudentFinance.objects.filter(student=student).all()]
             if sum(student_pays) < student.type.contract_amount1:
-                not_pay1 += student.type.contract_amount1 - student_pays
+                not_pay1 += student.type.contract_amount1 - sum(student_pays)
                 not_pay2 += student.type.contract_amount2
                 not_payed_1 += 1
                 not_payed_2 += 1
@@ -420,7 +420,8 @@ class DashboardView(generics.ListAPIView):
                     payed_2 += 1
                     pay2 += student.type.contract_amount2
                 else:
-                    p = sum(student_pays) - student.type.contract_amount2 + student.type.contract_amount2
+                    print(sum(student_pays))
+                    p = sum(student_pays) - student.type.contract_amount2 - student.type.contract_amount2
                     not_pay2 += p
                     not_payed_2 += 1
         finances = StudentFinance.objects.all()
