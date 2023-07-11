@@ -267,27 +267,30 @@ class StudentShartnomaView(generics.CreateAPIView):
         return []
 
     def create(self, request, *args, **kwargs):
-        student = Student.objects.filter(passport_seria=request.data['passport']).first()
-        if student:
-            agreement = Agreement.objects.filter(student=student).first()
-            if not agreement:
-                from datetime import date
-                today = date.today()
-                formatted_date = today.strftime('%d.%m.%Y')
-                template = student.type.shartnoma_file.url
-                create_shartnoma(id=student.user_finance_id, name=student.full_name, mode=student.study_type.name,
-                                 passport=student.passport_seria, faculty=student.faculty.site_name, template=template,
-                                 number=student.user.phone, price=student.type.contract_amount, date=formatted_date)
-                agreement = Agreement.objects.create(
-                    student=student,
-                )
-                agreement.file_path = f'http://185.65.202.40:1009/files/agreements/{student.user_finance_id}.pdf'
-                agreement.save()
-            print(agreement.file_path)
+        try:
 
-            return Response({"shartnoma": f"http://185.65.202.40:1009/files/agreements/{student.user_finance_id}.pdf"})
-        else:
-            return Response({})
+            student = Student.objects.filter(passport_seria=request.data['passport']).first()
+            if student:
+                agreement = Agreement.objects.filter(student=student).first()
+                if not agreement:
+                    from datetime import date
+                    today = date.today()
+                    formatted_date = today.strftime('%d.%m.%Y')
+                    template = student.type.shartnoma_file.url
+                    create_shartnoma(id=student.user_finance_id, name=student.full_name, mode=student.study_type.name,
+                                     passport=student.passport_seria, faculty=student.faculty.site_name, template=template,
+                                     number=student.user.phone, price=student.type.contract_amount, date=formatted_date)
+                    agreement = Agreement.objects.create(
+                        student=student
+                    )
+                    agreement.file_path = f'http://185.65.202.40:1009/files/agreements/{student.user_finance_id}.pdf'
+                    agreement.save()
+
+                return Response({"shartnoma": f"http://185.65.202.40:1009/files/agreements/{student.user_finance_id}.pdf"})
+            else:
+                return Response({})
+        except Exception as exx:
+            return Response([])
 
 
 class StudentMalumotnomaView(generics.CreateAPIView):
