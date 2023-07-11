@@ -420,7 +420,7 @@ class DashboardView(generics.ListAPIView):
                     payed_2 += 1
                     pay2 += student.type.contract_amount2
                 else:
-                    p = student_pays - student.type.contract_amount2 + student.type.contract_amount2
+                    p = sum(student_pays) - student.type.contract_amount2 + student.type.contract_amount2
                     not_pay2 += p
                     not_payed_2 += 1
         finances = StudentFinance.objects.all()
