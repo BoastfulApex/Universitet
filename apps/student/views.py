@@ -285,5 +285,28 @@ class StudentShartnomaView(generics.CreateAPIView):
                 )
                 agreement.file_path = f'http://185.65.202.40:1009/files/agreements/{student.user_finance_id}.pdf'
                 agreement.save()
-            print(agreement.id)
+            return Response({"shartnoma": agreement.file_path})
+
+
+class StudentMalumotnomaView(generics.CreateAPIView):
+    serializer_class = ShartnomaSerializer
+
+    def get_queryset(self):
+        return []
+
+    def create(self, request, *args, **kwargs):
+        student = Student.objects.filter(passport_seria=request.data['passport']).first()
+        if student:
+            from datetime import date
+            today = date.today()
+            formatted_date = today.strftime('%d.%m.%Y')
+            template = student.type.shartnoma_file.url
+            create_shartnoma(id=student.user.guid, name=student.full_name, mode=student.study_type.name,
+                             passport=student.passport_seria, faculty=student.faculty.site_name, template=template,
+                             number=student.user.phone, price=student.type.contract_amount, date=formatted_date)
+            agreement = Agreement.objects.create(
+                student=student,
+            )
+            agreement.file_path = f'http://185.65.202.40:1009/files/agreements/{student.user.guid}.pdf'
+            agreement.save()
             return Response({"shartnoma": agreement.file_path})

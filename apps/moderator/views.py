@@ -4,7 +4,7 @@ from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter
 import requests
-from student .models import Test, TestSubject, Student
+from student.models import Test, TestSubject, Student, StudentFinance
 from .db_api import *
 import pandas as pd
 from .permission_classes import *
@@ -90,12 +90,13 @@ class ApplicationObjectView(generics.RetrieveUpdateDestroyAPIView):
 
 class ApplicationUpdateView(generics.CreateAPIView):
     serializer_class = ApplicationUpdateSerializer
+
     # permission_classes = [WorkingApplicant]
 
     def post(self, request, *args, **kwargs):
         application = Application.objects.get(id=request.data['id'])
         application.status = request.data['status']
-        text = f"Assalomu alaykum {application.user.full_name}."\
+        text = f"Assalomu alaykum {application.user.full_name}." \
                f" Sizning {application.application_type} uchun qoldirgan arizangiz {application.status}!"
         if request.data['description']:
             text += f"Sabab: {request.data['description']}"
@@ -149,6 +150,7 @@ class FacultyObjectView(generics.RetrieveUpdateDestroyAPIView):
 
 class FacultyTypeView(generics.ListCreateAPIView):
     serializer_class = FacultyTypeSerializer
+
     # permission_classes = [CreateGroupFacultyType]
 
     def get_queryset(self):
@@ -214,6 +216,7 @@ class ListQuestionAPIView(generics.ListAPIView):
 class GroupView(generics.ListCreateAPIView):
     queryset = Group.objects.all()
     serializer_class = GroupsSerializer
+
     # permission_classes = [CreateGroupFacultyType]
 
     def create(self, request, *args, **kwargs):
@@ -241,6 +244,7 @@ class StudentView(generics.ListCreateAPIView):
     pagination_class = ApplicationPagination
     filter_backends = [SearchFilter]
     search_fields = ['user__full_name', 'user__phone', 'passport_seria']
+
     # permission_classes = [WorkingStudent]
 
     def get_queryset(self):
@@ -378,9 +382,32 @@ class DashboardView(generics.ListAPIView):
         all_pays = StudentFinance.objects.all()
         pays = [pay['summa'] for pay in all_pays]
         payed_1 = 0
+        not_pay1 = 0
+        not_pay2 = 0
+        pay1 = 0
+        pay2 = 0
         payed_2 = 0
         not_payed_1 = 0
         not_payed_2 = 0
+        for student in students:
+            student_pays = [pay.summa for pay in StudentFinance.objects.filter(student=student).all()]
+            if sum(student_pays) < student.student.type.contract_amount1:
+                not_pay1 += student.student.type.contract_amount1 - student_pays
+                not_pay2 += student.student.type.contract_amount2
+                not_payed_1 += 1
+                not_payed_2 += 1
+            else:
+                payed_1 += 1
+                pay1 += student.student.type.contract_amount1
+                if sum(student_pays) >= student.type.contract_amount2 + student.type.contract_amount2:
+                    payed_2 += 1
+                    pay2 += student.student.type.contract_amount2
+                else:
+                    p = student_pays - student.type.contract_amount2 + student.type.contract_amount2
+                    not_pay2 += p
+                    not_payed_2 += 1
+        finances = StudentFinance.objects.all()
+        all_summ_finance = [pay.summa for pay in StudentFinance.objects.filter().all()]
         return Response(
             {
                 'applications': len(register_application),
@@ -395,5 +422,10 @@ class DashboardView(generics.ListAPIView):
                 'payed_2': payed_2,
                 'not_payed_1': not_payed_1,
                 'not_payed_2': not_payed_2,
+                'pay1': pay1,
+                'pay2': pay2,
+                'not_pay1': not_pay1,
+                'not_pay2': not_pay2,
+                'all_summ_finance': sum(all_summ_finance)
             }
         )

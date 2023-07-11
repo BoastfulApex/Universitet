@@ -22,7 +22,7 @@ def create_shartnoma(name, id, passport, faculty, number, date, price, mode, tem
     # open("res.docx","wb") qilib ochsaham bo'ladi. Bunda file diskga yoziladi.
     #
     res = open(f"./files/agreements/{id}.docx", "wb")
-    q = qrcode.make(f'http://185.65.202.40:1009/files/agreements/{id}.docx')
+    q = qrcode.make(f'http://185.65.202.40:1009/files/agreements/{id}.pdf')
     q.save('./files/qrcode.png')
     # Word fileni ichida har bir elementni paragraphs orqali olib uni forloopga qo'yamiz
     for paragraph in doc.paragraphs:
@@ -132,8 +132,11 @@ def create_shartnoma(name, id, passport, faculty, number, date, price, mode, tem
                             font = run.font
                             font.name = "Tmes New Roman"
                             font.size = Pt(8)
+                        if '{qr}' in paragraph.text:
+                            paragraph.text = paragraph.text.replace('{qr}', "")
+                            run = paragraph.add_run()
+                            run.add_picture(f'./files/qrcode.png', width=Cm(3))
 
-    # File o'zgartirilgandan keyingi holatini file ga yoki On Memory file ga saqlab olamiz
     doc.save(res)
     # convert(f'./agreements/{id}.docx', f'./agreements/{id}.pdf')
     os.system(f"libreoffice --headless --convert-to pdf ./files/agreements/{id}.docx --outdir ./files/agreements")

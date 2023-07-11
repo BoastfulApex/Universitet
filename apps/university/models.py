@@ -49,7 +49,8 @@ class FacultyType(models.Model):
     test_minute = models.IntegerField(default=0)
     group_name = models.CharField(max_length=1000, null=True, blank=True)
     group_students = models.IntegerField(default=0)
-    contract_amount = models.IntegerField(default=0)
+    contract_amount1 = models.IntegerField(default=0)
+    contract_amount2 = models.IntegerField(default=0)
 
     first_quarter = models.DateField(null=True)
     second_quarter = models.DateField(null=True)
