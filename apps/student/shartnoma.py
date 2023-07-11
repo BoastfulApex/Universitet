@@ -59,7 +59,7 @@ def create_shartnoma(name, id, passport, faculty, number, date, price, mode, tem
                 .replace("{number}", f"+{number}")
                 .replace("{end}", "2027")
                 .replace("{mode}", f"{mode}")
-                .replace("{delta}", f"{4}")
+                .replace("{delta}", f"4")
             )
 
         # Word Document da bazab table'lar ham bo'ladi. Ularni paragraphs bilan ololmimiz.
@@ -104,6 +104,7 @@ def create_shartnoma(name, id, passport, faculty, number, date, price, mode, tem
                             .replace("{mode}", f"{mode}")
                             .replace("{lang}", "O'zbek")
                             .replace("{end}", "2027")
+                            .replace("{delta}", f"4")
                         )
 
     # Iterate over paragraphs
