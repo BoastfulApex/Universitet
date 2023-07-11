@@ -271,7 +271,6 @@ class StudentShartnomaView(generics.CreateAPIView):
 
             student = Student.objects.filter(passport_seria=request.data['passport']).first()
             if student:
-                agreement = Agreement.objects.filter(student=student).first()
                 from datetime import date
                 today = date.today()
                 formatted_date = today.strftime('%d.%m.%Y')
