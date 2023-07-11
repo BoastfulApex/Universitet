@@ -48,7 +48,7 @@ def create_shartnoma(name, id, passport, faculty, number, date, price, mode, tem
         ):
             # Agar qaysidir keyword paragraphning ichida uchrasa uni replace qiladi.
             paragraph.text = (
-                paragraph.text.replace("{id}", "4%06d" % int(f"{id}"))
+                paragraph.text.replace("{id}", f"{id}")
                 .replace("{name}", f"{name}")
                 .replace("{date}", f"{date}")
                 .replace("{address}", f"")
