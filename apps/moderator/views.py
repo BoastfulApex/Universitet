@@ -253,24 +253,27 @@ class StudentView(generics.ListCreateAPIView):
         pay_type = self.request.GET.get('pay_type') if 'pay_type' in self.request.GET else None
         response_students = []
         if group_id:
-            response_students = queryset.filter(group_id=group_id)
+            queryset = queryset.filter(group_id=group_id)
         if pay_type == "payed":
             for student in queryset:
                 student_pays = [pay.summa for pay in StudentFinance.objects.filter(student=student).all()]
-                if sum(student_pays) >= (student.student.type.contract_amount1 + student.student.type.contract_amount2):
+                if sum(student_pays) >= (student.type.contract_amount1 + student.type.contract_amount2):
                     response_students.append(student)
+                    queryset = response_students
         if pay_type == "not_payed":
             for student in queryset:
                 student_pays = [pay.summa for pay in StudentFinance.objects.filter(student=student).all()]
-                if sum(student_pays) < (student.student.type.contract_amount1 + student.student.type.contract_amount2):
+                if sum(student_pays) < (student.type.contract_amount1 + student.type.contract_amount2):
                     response_students.append(student)
+            queryset = response_students
         if pay_type == "pay_date":
             for student in queryset:
                 from datetime import date
                 today = date.today()
                 if student.type.first_quarter - today < 10 or student.type.second_quarter:
                     response_students.append(student)
-        return response_students
+            queryset = response_students
+        return queryset
 
 
 class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
