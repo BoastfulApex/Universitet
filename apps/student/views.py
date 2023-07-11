@@ -267,7 +267,7 @@ class StudentShartnomaView(generics.CreateAPIView):
         return []
 
     def create(self, request, *args, **kwargs):
-        try:
+        # try:
 
             student = Student.objects.filter(passport_seria=request.data['passport']).first()
             if student:
@@ -286,8 +286,8 @@ class StudentShartnomaView(generics.CreateAPIView):
                 return Response({"shartnoma": agreement.file_path})
             else:
                 return Response({})
-        except Exception as exx:
-            return Response([])
+        # except Exception as exx:
+        #     return Response([])
 
 
 class StudentMalumotnomaView(generics.CreateAPIView):
