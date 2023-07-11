@@ -53,7 +53,7 @@ class ApplicationView(generics.ListCreateAPIView):
 class ApplicationObjectView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
-    permission_classes = [WorkingApplicant]
+    # permission_classes = [WorkingApplicant]
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
