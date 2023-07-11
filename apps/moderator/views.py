@@ -270,7 +270,8 @@ class StudentView(generics.ListCreateAPIView):
             for student in queryset:
                 from datetime import date
                 today = date.today()
-                if student.type.first_quarter - today < 10:
+                difference = student.type.first_quarter - today
+                if difference.days < 10:
                     response_students.append(student)
             queryset = response_students
         return queryset
