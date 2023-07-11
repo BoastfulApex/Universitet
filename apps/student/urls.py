@@ -13,5 +13,6 @@ urlpatterns = [
     path('test/answer/<int:pk>', StudentTestAnswer.as_view(), name='user-test-answer'),
 
     path('shartnoma/', StudentShartnomaView.as_view(), name='user-shartnoma'),
+    path('malumotnoma/', StudentMalumotnomaView.as_view(), name='user-malumotnoma'),
 
 ]
