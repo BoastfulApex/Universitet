@@ -275,9 +275,10 @@ class StudentShartnomaView(generics.CreateAPIView):
                 today = date.today()
                 formatted_date = today.strftime('%d.%m.%Y')
                 template = student.type.shartnoma_file.url
+                kontrak = student.type.contract_amount1 + student.type.contract_amount2
                 create_shartnoma(id=student.user_finance_id, name=student.full_name, mode=student.study_type.name,
                                  passport=student.passport_seria, faculty=student.faculty.site_name, template=template,
-                                 number=student.user.phone, price=student.type.contract_amount, date=formatted_date)
+                                 number=student.user.phone, price=kontrak, date=formatted_date)
                 agreement = Agreement.objects.create(
                     student=student
                 )
@@ -303,9 +304,10 @@ class StudentMalumotnomaView(generics.CreateAPIView):
             today = date.today()
             formatted_date = today.strftime('%d.%m.%Y')
             template = student.type.shartnoma_file.url
+            kontrak = student.type.contract_amount1 + student.type.contract_amount2
             create_shartnoma(id=student.user.guid, name=student.full_name, mode=student.study_type.name,
                              passport=student.passport_seria, faculty=student.faculty.site_name, template=template,
-                             number=student.user.phone, price=student.type.contract_amount, date=formatted_date)
+                             number=student.user.phone, price=kontrak, date=formatted_date)
             agreement = Agreement.objects.create(
                 student=student,
             )
