@@ -308,3 +308,5 @@ class StudentMalumotnomaView(generics.CreateAPIView):
             agreement.file_path = f'http://185.65.202.40:1009/files/agreements/{student.user.guid}.pdf'
             agreement.save()
             return Response({"shartnoma": agreement.file_path})
+        else:
+            return Response([])
