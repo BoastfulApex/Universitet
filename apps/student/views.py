@@ -285,7 +285,7 @@ class StudentShartnomaView(generics.CreateAPIView):
                 agreement.save()
             print(agreement.file_path)
 
-            return Response({"shartnoma": agreement.file_path})
+            return Response({"shartnoma": f"http://185.65.202.40:1009/files/agreements/{student.user_finance_id}.pdf"})
         else:
             return Response({})
 
