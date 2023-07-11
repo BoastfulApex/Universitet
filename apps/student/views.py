@@ -310,4 +310,4 @@ class StudentMalumotnomaView(generics.CreateAPIView):
             agreement.save()
             return Response({"shartnoma": agreement.file_path})
         else:
-            return Response([])
+            return Response({})
