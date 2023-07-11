@@ -305,13 +305,13 @@ class StudentMalumotnomaView(generics.CreateAPIView):
             formatted_date = today.strftime('%d.%m.%Y')
             template = student.type.shartnoma_file.url
             kontrak = student.type.contract_amount1 + student.type.contract_amount2
-            create_shartnoma(id=student.user.guid, name=student.full_name, mode=student.study_type.name,
+            create_shartnoma(id=student.id, name=student.full_name, mode=student.study_type.name,
                              passport=student.passport_seria, faculty=student.faculty.site_name, template=template,
                              number=student.user.phone, price=kontrak, date=formatted_date)
             agreement = Agreement.objects.create(
                 student=student,
             )
-            agreement.file_path = f'http://185.65.202.40:1009/files/agreements/{student.user.guid}.pdf'
+            agreement.file_path = f'http://185.65.202.40:1009/files/agreements/{student.id}.pdf'
             agreement.save()
             return Response({"shartnoma": agreement.file_path})
         else:

@@ -15,8 +15,8 @@ def create_shartnoma(name, id, passport, faculty, number, date, price, mode, tem
     word_file = open(f".{template}", "rb")
 
     doc: Doc = Document(word_file)
-
     res = open(f"./files/agreements/{id}.docx", "wb")
+
     q = qrcode.make(f'http://185.65.202.40:1009/files/agreements/{id}.pdf')
     q.save('./files/qrcode.png')
     for paragraph in doc.paragraphs:
