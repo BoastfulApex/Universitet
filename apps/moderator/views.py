@@ -374,13 +374,18 @@ class FinanceFileView(generics.CreateAPIView):
         df = pd.read_excel(file_path)
 
         for i in df.index:
-            student = Student.objects.filter(user_finance_id=df['Студент'][i]).first()
-            if student:
-                pay = StudentFinence.objects.create(
-                    student=student,
-                    summa=int(df['Оборот керидит'][i])
-                )
-                pay.save()
+            str_agreement = df['Назначение платежа'][i]
+            try:
+                agreement_id = str(str_agreement).split('№0/9 ')[1][:5]
+                student = Student.objects.filter(user_finance_id=agreement_id).first()
+                if student:
+                    pay = StudentFinence.objects.create(
+                        student=student,
+                        summa=int(df['Оборот керидит'][i])
+                    )
+                    pay.save()
+            except:
+                pass
         return Response({'status': "finance file added"})
 
 
