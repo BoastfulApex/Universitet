@@ -456,3 +456,84 @@ class DashboardView(generics.ListAPIView):
                 'all_summ_finance': sum(all_summ_finance)
             }
         )
+
+
+class FacultyTypeAddView(generics.CreateAPIView):
+    serializer_class = FinanceFileSerializer
+
+    def create(self, request, *args, **kwargs):
+        uploaded_file = request.FILES['file']
+        with open('./files/faculty_type-file.xlsx', 'wb') as destination_file:
+            for chunk in uploaded_file.chunks():
+                destination_file.write(chunk)
+        file_path = open('./files/faculty_type-file.xlsx', 'rb')
+        df = pd.read_excel(file_path)
+        response_data = []
+        for i in df.index:
+            faculty_name = df['Fakultet'][i]
+            faculty, created = Faculty.objects.get(
+                admin_name=faculty_name
+            )
+            faculty.site_name = faculty_name
+            faculty.save()
+            type_name = df["Yo'nalish"][i]
+            type, create = FacultyType.objects.get_or_create(
+                faculty=faculty,
+                name=name
+            )
+            faculty_data = {
+                'id': faculty.id,
+                'admin_name': faculty.admin_name,
+                'site_name': faculty.site_name
+            }
+            response_data.append(faculty_data)
+        return Response(response_data)
+
+class StudentFileAddView(generics.CreateAPIView):
+    serializer_class = FinanceFileSerializer
+
+    def create(self, request, *args, **kwargs):
+        uploaded_file = request.FILES['file']
+        with open('./files/faculty_type-file.xlsx', 'wb') as destination_file:
+            for chunk in uploaded_file.chunks():
+                destination_file.write(chunk)
+        file_path = open('./files/faculty_type-file.xlsx', 'rb')
+        df = pd.read_excel(file_path)
+        response_data = []
+        for i in df.index:
+            check = False
+            phone = df['Telefon Raqam'][i]
+            user, created = User.objects.get_or_create(
+                phone=phone
+            )
+            user.save()
+            faculty_name = df['Fakultet'][i]
+            faculty = Faculty.objects.filter(admin_name=faculty_name).first()
+            type_name = df["Yo'nalish"][i]
+            faculty_type = FacultyType.objects.filter(name=type_name)
+            if faculty_type != [] and faculty != []:
+                study_type = StudyType.objects.filter(name=df["O'qish turi"]).first()
+                applicant, created = Application.objects.get_or_create(
+                    user=user,
+                )
+                applicant.phone = df['Telefon Raqam'][i]
+                applicant.faculty = faculty
+                applicant.type = faculty_type
+                applicant.study_type = study_type
+                applicant.passport_seria = df['Passport']
+                applicant.full_name = df['Ism']
+                applicant.save()
+                applicant_data = {
+                    'id': applicant.id,
+                    'user': {
+                        'phone': applicant.user.phone
+                    },
+                    'phone': applicant.phone,
+                    'faculty': applicant.faculty.id,
+                    'type': applicant.type.id,
+                    'study_type': applicant.study_type.id,
+
+                }
+                response_data.append(applicant_data)
+        return Response(response_data)
+

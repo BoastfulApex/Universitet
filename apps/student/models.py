@@ -55,11 +55,11 @@ class Student(models.Model):
     university_license = models.ImageField(null=True, blank=True)
     university_accreditation = models.ImageField(null=True, blank=True)
 
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            self.full_name = self.user.full_name
-        super(Student, self).save(*args, **kwargs)
-
+    # def save(self, *args, **kwargs):
+    #     if not self.pk:
+    #         self.full_name = self.user.full_name
+    #     super(Student, self).save(*args, **kwargs)
+    #
 
 class Application(models.Model):
     _validate_phone = RegexValidator(
@@ -111,11 +111,11 @@ class Application(models.Model):
     description = models.CharField(max_length=10000, null=True, blank=True)
 
     def save(self, *args, **kwargs):
+        if self.type:
+            self.is_privilege = self.type.check_privilege()
         if not self.pk:
             self.full_name = self.user.full_name
             self.phone = self.user.phone
-            if self.type:
-                self.is_privilege = self.type.check_privilege()
         super(Application, self).save(*args, **kwargs)
 
 
