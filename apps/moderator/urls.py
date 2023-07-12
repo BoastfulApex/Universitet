@@ -28,6 +28,7 @@ urlpatterns = [
 
     path('finance_file/', FinanceFileView.as_view(), name='finance_file'),
     path('dashboard/', DashboardView.as_view(), name='dashboard'),
+    path('add_students_file/', StudentFileAddView.as_view(), name='add_students_file'),
 
 ]
 
