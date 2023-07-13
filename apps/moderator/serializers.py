@@ -84,6 +84,13 @@ class ApplicationSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 
+class ApplicationDetailSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Application
+        fields = '__all__'
+
+
 class ApplicationUpdateSerializer(serializers.Serializer):
     id = serializers.CharField(max_length=100)
     status = serializers.ChoiceField(choices=Application.STATUS_TYPES)
