@@ -489,8 +489,12 @@ class FacultyTypeAddView(generics.CreateAPIView):
             response_data.append(faculty_data)
         return Response(response_data)
 
+
 class StudentFileAddView(generics.CreateAPIView):
     serializer_class = FinanceFileSerializer
+
+    def get_queryset(self):
+        return []
 
     def create(self, request, *args, **kwargs):
         uploaded_file = request.FILES['file']
