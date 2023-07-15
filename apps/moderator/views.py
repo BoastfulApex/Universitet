@@ -514,7 +514,7 @@ class StudentFileAddView(generics.CreateAPIView):
             faculty_name = df['Fakultet'][i]
             faculty = Faculty.objects.filter(admin_name=faculty_name).first()
             type_name = df["Yo'nalish"][i]
-            faculty_type = FacultyType.objects.filter(name=type_name)
+            faculty_type = FacultyType.objects.filter(name=type_name).first()
             if faculty_type != [] and faculty != []:
                 study_type = StudyType.objects.filter(name=df["O'qish turi"]).first()
                 applicant, created = Application.objects.get_or_create(
