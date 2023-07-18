@@ -114,7 +114,6 @@ class Application(models.Model):
         if self.type:
             self.is_privilege = self.type.check_privilege()
         if not self.pk:
-            self.full_name = self.user.full_name
             self.phone = self.user.phone
         super(Application, self).save(*args, **kwargs)
 
