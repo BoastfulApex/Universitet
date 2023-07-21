@@ -107,6 +107,7 @@ class ApplicationUpdateView(generics.CreateAPIView):
             student.study_type = application.study_type
             student.passport_seria = application.passport_seria
             student.faculty = application.faculty
+            student.full_name = application.full_name
             student.type = application.type
             student.diploma_picture = application.diploma_picture
             student.diploma_seria = application.diploma_seria
