@@ -401,6 +401,7 @@ class DashboardView(generics.ListAPIView):
         groups = Group.objects.all()
         faculty = Faculty.objects.all()
         faculty_type = FacultyType.objects.all()
+        all_need_summa = 0
         students = Student.objects.all()
         confirmed_applications = Application.objects.filter(status='Tasdiqlandi').all()
         canceled_applications = Application.objects.filter(status='Rad etildi').all()
@@ -434,6 +435,8 @@ class DashboardView(generics.ListAPIView):
                     not_payed_2 += 1
         finances = StudentFinance.objects.all()
         all_summ_finance = [pay.summa for pay in StudentFinance.objects.filter().all()]
+        for i in faculty_type:
+            all_need_summa += i.contract_amount2 + i.contract_amount1
         return Response(
             {
                 'applications': len(register_application),
@@ -452,7 +455,8 @@ class DashboardView(generics.ListAPIView):
                 'pay2': pay2,
                 'not_pay1': not_pay1,
                 'not_pay2': not_pay2,
-                'all_summ_finance': sum(all_summ_finance)
+                'all_summ_finance': sum(all_summ_finance),
+                'all_need_summa': all_need_summa - sum(pays)
             }
         )
 
