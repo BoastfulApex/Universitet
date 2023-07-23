@@ -12,6 +12,7 @@ urlpatterns = [
     path('application/', ApplicationView.as_view(), name='application-view'),
     path('application/<int:pk>', ApplicationObjectView.as_view(), name='application-object'),
     path('application_update/', ApplicationUpdateView.as_view(), name='application-update'),
+    path('application_list_update/', ApplicationListUpdateView.as_view(), name='application-list-update'),
     path('subject/', SubjectView.as_view(), name='subject-view'),
     path('subject/<int:pk>', SubjectDetail.as_view(), name='subject-detail-view'),
     path('subject/<int:subject_id>/questions/', ListQuestionAPIView.as_view(), name='subject-questions'),

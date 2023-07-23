@@ -353,8 +353,6 @@ class SendMessageView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         my_list = request.data['groups']
-        print(type(my_list))
-        print(type(my_list))
         groups = Group.objects.filter(id__in=my_list).all()
         for group in groups:
             students = Student.objects.filter(group=group).all()
@@ -542,3 +540,40 @@ class StudentFileAddView(generics.CreateAPIView):
                 response_data.append(applicant_data)
         return Response(response_data)
 
+
+class ApplicationListUpdateView(generics.CreateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = ApplicationListUpdateSerializer
+
+    def post(self, request, *args, **kwargs):
+        def post(self, request, *args, **kwargs):
+            for app_id in request.data['objects']:
+                application = Application.objects.get(id=app_id)
+                application.status = request.data['status']
+                text = f"Assalomu alaykum {application.user.full_name}." \
+                       f" Sizning {application.application_type} uchun qoldirgan arizangiz {application.status}!"
+                if request.data['description']:
+                    text += f"Sabab: {request.data['description']}"
+                    application.description = request.data['description']
+                application.save()
+                if application.application_type != "Konsultatsiya" and application.status == "Tasdiqlandi":
+                    student, created = Student.objects.get_or_create(user=application.user)
+                    student.study_type = application.study_type
+                    student.passport_seria = application.passport_seria
+                    student.faculty = application.faculty
+                    student.full_name = application.full_name
+                    student.type = application.type
+                    student.diploma_picture = application.diploma_picture
+                    student.diploma_seria = application.diploma_seria
+                    student.ielts_picture = application.ielts_picture
+                    student.acceptance_order = application.acceptance_order
+                    student.course_order = application.course_order
+                    student.removal_order = application.removal_order
+                    student.academic_certificate = application.academic_certificate
+                    student.university_license = application.university_license
+                    student.university_accreditation = application.university_accreditation
+                    student.group = get_valid_group(application.type)
+                    student.save()
+                text += ""
+                send_sms(phone=application.user.phone, text=text)
+            return Response({'status': 'edited'})

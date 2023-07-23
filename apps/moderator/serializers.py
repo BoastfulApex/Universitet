@@ -143,3 +143,10 @@ class SendMessageSerializer(serializers.Serializer):
 
 class FinanceFileSerializer(serializers.Serializer):
     file = serializers.FileField()
+
+
+class ApplicationListUpdateSerializer(serializers.Serializer):
+    status = serializers.ChoiceField(choices=Application.STATUS_TYPES)
+    objects = serializers.ListField(child=serializers.IntegerField())
+    description = serializers.CharField(max_length=5000)
+
