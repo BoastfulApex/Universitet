@@ -461,6 +461,35 @@ class DashboardView(generics.ListAPIView):
         )
 
 
+class NotPayedStudent(generics.ListAPIView):
+    def get_queryset(self):
+        return []
+
+    def list(self, request, *args, **kwargs):
+        faculty_type = FacultyType.objects.all()
+        all_need_summa = 0
+        students = Student.objects.all()
+        not_pay1 = []
+        not_pay2 = []
+        for student in students:
+            student_pays = [pay.summa for pay in StudentFinance.objects.filter(student=student).all()]
+            if sum(student_pays) < student.type.contract_amount1:
+                not_pay1.append(student)
+                not_pay2.append(student)
+            else:
+                if sum(student_pays) >= student.type.contract_amount2 + student.type.contract_amount2:
+                    pass
+                else:
+                    p = sum(student_pays) - student.type.contract_amount2 - student.type.contract_amount2
+                    not_pay2.append(student)
+        return Response(
+            {
+                "not_pay_2": not_pay2,
+                "not_pay_1": not_pay1,
+            }
+        )
+
+
 class FacultyTypeAddView(generics.CreateAPIView):
     serializer_class = FinanceFileSerializer
 
@@ -576,7 +605,7 @@ class ApplicationListUpdateView(generics.CreateAPIView):
                     student.academic_certificate = application.academic_certificate
                     student.university_license = application.university_license
                     student.university_accreditation = application.university_accreditation
-                    student.group = get_valid_group(application.type)
+                    student.group = get_valid_group(application.type, kurs=application.kurs_for)
                     student.save()
                 text += ""
                 send_sms(phone=application.user.phone, text=text)

@@ -68,6 +68,7 @@ class Student(models.Model):
     #     super(Student, self).save(*args, **kwargs)
     #
 
+
 class Application(models.Model):
     _validate_phone = RegexValidator(
         regex="(0|91)?[7-9][0-9]{9}",
