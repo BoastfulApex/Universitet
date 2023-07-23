@@ -18,8 +18,8 @@ def get_group_students_value(group):
     return len(students)
 
 
-def get_valid_group(faculty_type):
-    group = Group.objects.filter(faculty_type=faculty_type, course="1-Kurs").last()
+def get_valid_group(faculty_type, kurs):
+    group = Group.objects.filter(faculty_type=faculty_type, course=kurs).last()
     if not group and group.students <= get_group_students_value(group):
         group = Group.objects.create(
             faculty_type=faculty_type,

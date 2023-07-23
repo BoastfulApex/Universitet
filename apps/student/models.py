@@ -20,6 +20,13 @@ NEW, FULL, CONFIRMED, CANCELED, REGISTRATION, TRANSFER, CONSULTATION = (
 )
 
 
+kurs1, kurs2, kurs3, kurs4 = (
+    "1-Kurs",
+    "2-Kurs",
+    "3-Kurs",
+    "4-Kurs",
+)
+
 class Student(models.Model):
     _validate_phone = RegexValidator(
         regex="(0|91)?[7-9][0-9]{9}",
@@ -78,6 +85,12 @@ class Application(models.Model):
         (TRANSFER, TRANSFER),
         (CONSULTATION, CONSULTATION)
     )
+
+    KURS = (
+        (kurs1, kurs1),
+        (kurs2, kurs2),
+        (kurs3, kurs3)
+    )
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     full_name = models.CharField(_("full name"), max_length=150, blank=True, null=True)
     phone = models.CharField(max_length=15, null=True, validators=[_validate_phone])
@@ -94,6 +107,7 @@ class Application(models.Model):
     diploma_picture = models.ImageField(null=True, blank=True)
 
     ielts_picture = models.ImageField(null=True, blank=True)
+    kurs_for = models.CharField(max_length=100, null=True, choices=KURS)
 
     acceptance_order = models.ImageField(null=True, blank=True)
     course_order = models.ImageField(null=True, blank=True)

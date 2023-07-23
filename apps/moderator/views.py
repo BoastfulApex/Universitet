@@ -118,7 +118,7 @@ class ApplicationUpdateView(generics.CreateAPIView):
             student.academic_certificate = application.academic_certificate
             student.university_license = application.university_license
             student.university_accreditation = application.university_accreditation
-            student.group = get_valid_group(application.type)
+            student.group = get_valid_group(application.type, kurs=application.kurs_for)
             student.save()
         text += ""
         send_sms(phone=application.user.phone, text=text)
