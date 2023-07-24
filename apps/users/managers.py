@@ -38,9 +38,7 @@ class UserManager(BaseUserManager):
         user = self.model(
             phone=phone,
             is_staff=True,
-            is_superuser=True,
-            super_admin=True,
-
+            is_superuser=True
         )
 
         user.set_password(password)

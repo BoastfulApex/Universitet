@@ -71,8 +71,19 @@ class EditGroup(BasePermission):
 class Finance(BasePermission):
 
     def has_permission(self, request, view):
-        if request.user.finance:
-            if request.user.working_with_applicant or request.user.super_admin:
+        if request.user.is_authenticated:
+            if request.user.finance or request.user.super_admin:
+                return True
+            else:
+                return False
+        return False
+
+
+class Analytica(BasePermission):
+
+    def has_permission(self, request, view):
+        if request.user.is_authenticated:
+            if request.user.analytica or request.user.super_admin:
                 return True
             else:
                 return False

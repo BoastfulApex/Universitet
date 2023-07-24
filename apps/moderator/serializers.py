@@ -35,7 +35,16 @@ class ModeratorSerializer(serializers.ModelSerializer):
         name = user_data.pop('full_name')
         # Create the User instance
         user = User.objects.create_superuser(phone=phone, password=password)
-        user.full_name=name
+        user.full_name = name
+        user.edit_group = user_data.pop('edit_group')
+        user.working_with_student = user_data.pop('working_with_student')
+        user.working_with_applicant = user_data.pop('working_with_applicant')
+        user.create_subject = user_data.pop('create_subject')
+        user.super_admin = user_data.pop('super_admin')
+        user.create_group_faculty_type = user_data.pop('create_group_faculty_type')
+        user.send_message = user_data.pop('send_message')
+        user.finance = user_data.pop('finance')
+        user.analytica = user_data.pop('analytica')
         user.save()
 
         # Create the Moderator instance

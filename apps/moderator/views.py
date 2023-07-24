@@ -292,8 +292,32 @@ class StudentsDoc(generics.ListAPIView):
         queryset = Student.objects.all()
         group_id = self.request.GET.get('group_id')
 
+        queryset = Student.objects.all()
+        group_id = self.request.GET.get('group_id')
+        pay_type = self.request.GET.get('pay_type') if 'pay_type' in self.request.GET else None
+        response_students = []
         if group_id:
             queryset = queryset.filter(group_id=group_id)
+        if pay_type == "payed":
+            for student in queryset:
+                student_pays = [pay.summa for pay in StudentFinance.objects.filter(student=student).all()]
+                if sum(student_pays) >= (student.type.contract_amount1 + student.type.contract_amount2):
+                    response_students.append(student)
+            queryset = response_students
+        if pay_type == "not_payed":
+            for student in queryset:
+                student_pays = [pay.summa for pay in StudentFinance.objects.filter(student=student).all()]
+                if sum(student_pays) < (student.type.contract_amount1 + student.type.contract_amount2):
+                    response_students.append(student)
+            queryset = response_students
+        if pay_type == "pay_date":
+            for student in queryset:
+                from datetime import date
+                today = date.today()
+                difference = student.type.first_quarter - today
+                if difference.days < 10:
+                    response_students.append(student)
+            queryset = response_students
         return queryset
 
     def list(self, request, *args, **kwargs):

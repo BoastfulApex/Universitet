@@ -45,6 +45,7 @@ class User(AbstractUser):
     send_message = models.BooleanField(default=False)
     edit_group = models.BooleanField(default=False)
     finance = models.BooleanField(default=False)
+    analytica = models.BooleanField(default=False)
 
     USERNAME_FIELD = "phone"
     REQUIRED_FIELDS = []
