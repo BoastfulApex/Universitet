@@ -88,3 +88,14 @@ class Analytica(BasePermission):
             else:
                 return False
         return False
+
+
+class SuperAdmin(BasePermission):
+
+    def has_permission(self, request, view):
+        if request.user.is_authenticated:
+            if request.user.super_admin:
+                return True
+            else:
+                return False
+        return False

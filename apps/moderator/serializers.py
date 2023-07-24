@@ -18,7 +18,7 @@ class ModeratorUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['phone', 'password', 'full_name', 'super_admin', 'create_subject', 'create_group_faculty_type',
-                  'working_with_applicant', 'working_with_student', 'send_message', 'edit_group', 'finance']
+                  'working_with_applicant', 'working_with_student', 'send_message', 'edit_group', 'finance', 'analytica']
 
 
 class ModeratorSerializer(serializers.ModelSerializer):
