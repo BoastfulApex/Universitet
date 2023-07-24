@@ -610,3 +610,12 @@ class ApplicationListUpdateView(generics.CreateAPIView):
                 text += ""
                 send_sms(phone=application.user.phone, text=text)
         return Response({'status': 'edited'})
+
+
+class ModeratorPermissions(generics.ListAPIView):
+    serializer_class = ModeratorSerializer
+
+    def get_queryset(self):
+        queryset = Moderator.objects.filter(user=self.request.user)
+        return queryset
+
