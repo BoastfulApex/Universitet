@@ -417,6 +417,8 @@ class FinanceFileView(generics.CreateAPIView):
 
 
 class DashboardView(generics.ListAPIView):
+    permission_classes = [Analytica]
+
     def get_queryset(self):
         return []
 
