@@ -32,7 +32,8 @@ urlpatterns = [
     path('check_moderator/', ModeratorPermissions.as_view(), name='check_moderator'),
     path('not_pay_students/', NotPayedStudent.as_view(), name='not_pay_students'),
     path('add_students_file/', StudentFileAddView.as_view(), name='add_students_file'),
-    path('delete_for/', DeleteFor.as_view(), name='delete_for'),
+    # path('delete_for/', DeleteFor.as_view(), name='delete_for'),
+    path('change_year/', ChangeYear.as_view(), name='change_year'),
 
 ]
 

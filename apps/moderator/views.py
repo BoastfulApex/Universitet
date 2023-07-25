@@ -497,8 +497,6 @@ class NotPayedStudent(generics.ListAPIView):
         return []
 
     def list(self, request, *args, **kwargs):
-        faculty_type = FacultyType.objects.all()
-        all_need_summa = 0
         students = Student.objects.all()
         not_pay1 = []
         not_pay2 = []
@@ -507,12 +505,10 @@ class NotPayedStudent(generics.ListAPIView):
             if sum(student_pays) < student.type.contract_amount1:
                 not_pay1.append(student)
                 not_pay2.append(student)
+            elif sum(student_pays) >= student.type.contract_amount2 + student.type.contract_amount2:
+                pass
             else:
-                if sum(student_pays) >= student.type.contract_amount2 + student.type.contract_amount2:
-                    pass
-                else:
-                    p = sum(student_pays) - student.type.contract_amount2 - student.type.contract_amount2
-                    not_pay2.append(student)
+                not_pay2.append(student)
         return Response(
             {
                 "not_pay_2": not_pay2,
