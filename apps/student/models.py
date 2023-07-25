@@ -66,7 +66,6 @@ class Student(models.Model):
     #     if not self.pk:
     #         self.full_name = self.user.full_name
     #     super(Student, self).save(*args, **kwargs)
-    #
 
 
 class Application(models.Model):
