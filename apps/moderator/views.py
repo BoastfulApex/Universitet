@@ -8,6 +8,8 @@ from student.models import Test, TestSubject, Student, StudentFinance
 from .db_api import *
 import pandas as pd
 from .permission_classes import *
+from django.core import serializers
+import json
 
 
 def send_sms(phone, text):
@@ -500,15 +502,17 @@ class NotPayedStudent(generics.ListAPIView):
         students = Student.objects.all()
         not_pay1 = []
         not_pay2 = []
+
         for student in students:
             student_pays = [pay.summa for pay in StudentFinance.objects.filter(student=student).all()]
             if sum(student_pays) < student.type.contract_amount1 or sum(student_pays) == 0:
-                not_pay1.append(student)
-                not_pay2.append(student)
+                not_pay1.append(serializers.serialize('python', [student])[0])
+                not_pay2.append(serializers.serialize('python', [student])[0])
             elif sum(student_pays) >= student.type.contract_amount2 + student.type.contract_amount2:
                 pass
             else:
-                not_pay2.append(student.objects())
+                not_pay2.append(serializers.serialize('python', [student])[0])
+
         return Response(
             {
                 "not_pay_2": not_pay2,
