@@ -25,7 +25,7 @@ def get_valid_group(faculty_type, kurs):
             faculty_type=faculty_type,
             faculty=faculty_type.faculty,
             name=get_valid_group_name(faculty_type),
-            students=faculty_type.students
+            students=faculty_type.group_students if faculty_type.group_students else 20
         )
         group.save()
     elif group.students <= get_group_students_value(group):
@@ -33,7 +33,7 @@ def get_valid_group(faculty_type, kurs):
             faculty_type=faculty_type,
             faculty=faculty_type.faculty,
             name=get_valid_group_name(faculty_type),
-            students=faculty_type.students
+            students=faculty_type.group_students if faculty_type.group_students else 20
         )
         group.save()
     return group
