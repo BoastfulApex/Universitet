@@ -653,3 +653,20 @@ class ModeratorPermissions(generics.ListAPIView):
         queryset = Moderator.objects.filter(user=self.request.user)
         return queryset
 
+
+class ChangeYear(generics.ListAPIView):
+    serializer_class = ApplicationListUpdateSerializer
+    permission_classes = [SuperAdmin]
+    
+    def get_queryset(self):
+        return []
+
+    def list(self, request, *args, **kwargs):
+        for group in Group.objects.all():
+            if group.course != '4-Kurs':
+                kurs = int(group.course.split('-')[0])
+                group.course = f"{kurs + 1}-Kurs"
+            else:
+                group.course = "Tugallagan"
+            group.save()
+
