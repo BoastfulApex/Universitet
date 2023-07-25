@@ -502,7 +502,7 @@ class NotPayedStudent(generics.ListAPIView):
         not_pay2 = []
         for student in students:
             student_pays = [pay.summa for pay in StudentFinance.objects.filter(student=student).all()]
-            if sum(student_pays) < student.type.contract_amount1:
+            if sum(student_pays) < student.type.contract_amount1 or sum(student_pays) == 0:
                 not_pay1.append(student)
                 not_pay2.append(student)
             elif sum(student_pays) >= student.type.contract_amount2 + student.type.contract_amount2:
