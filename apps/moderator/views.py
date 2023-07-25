@@ -364,7 +364,7 @@ class AnswerView(generics.ListAPIView):
 class ModeratorView(generics.ListCreateAPIView):
     queryset = Moderator.objects.all()
     serializer_class = ModeratorSerializer
-    permission_classes = [SuperAdmin]
+    # permission_classes = [SuperAdmin]
 
 
 class ModeratorDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -647,7 +647,7 @@ class ApplicationListUpdateView(generics.CreateAPIView):
 
 class ModeratorPermissions(generics.ListAPIView):
     serializer_class = ModeratorSerializer
-    permission_classes = [permissions.IsAdminUser]
+    # permission_classes = [permissions.IsAdminUser]
 
     def get_queryset(self):
         queryset = Moderator.objects.filter(user=self.request.user)
