@@ -508,7 +508,7 @@ class NotPayedStudent(generics.ListAPIView):
             elif sum(student_pays) >= student.type.contract_amount2 + student.type.contract_amount2:
                 pass
             else:
-                not_pay2.append(student)
+                not_pay2.append(student.objects())
         return Response(
             {
                 "not_pay_2": not_pay2,
