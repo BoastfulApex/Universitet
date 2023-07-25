@@ -670,3 +670,15 @@ class ChangeYear(generics.ListAPIView):
                 group.course = "Tugallagan"
             group.save()
 
+
+class DeleteFor(generics.ListAPIView):
+    serializer_class = StudentsSerializer
+
+    def get_queryset(self):
+        return []
+
+    def list(self, request, *args, **kwargs):
+        applications = Application.objects.all()
+        for i in applications:
+            if i.id != 32:
+                i.delete()
