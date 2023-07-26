@@ -27,7 +27,14 @@ kurs1, kurs2, kurs3, kurs4 = (
     "4-Kurs",
 )
 
+
 class Student(models.Model):
+    KURS = (
+        (kurs1, kurs1),
+        (kurs2, kurs2),
+        (kurs3, kurs3)
+    )
+
     _validate_phone = RegexValidator(
         regex="(0|91)?[7-9][0-9]{9}",
         message="Telefon raqam Xalqaro Formatda 998YYXXXXXXX ko'rinishida kiritilishi kerak!"
@@ -61,6 +68,13 @@ class Student(models.Model):
     academic_certificate = models.ImageField(null=True, blank=True)
     university_license = models.ImageField(null=True, blank=True)
     university_accreditation = models.ImageField(null=True, blank=True)
+    course = models.CharField(max_length=100, null=True, choices=KURS)
+
+    contract_amount1 = models.IntegerField(default=0)
+    contract_amount2 = models.IntegerField(default=0)
+
+    first_quarter = models.DateField(null=True)
+    second_quarter = models.DateField(null=True)
 
     # def save(self, *args, **kwargs):
     #     if not self.pk:
@@ -89,7 +103,8 @@ class Application(models.Model):
     KURS = (
         (kurs1, kurs1),
         (kurs2, kurs2),
-        (kurs3, kurs3)
+        (kurs3, kurs3),
+        (kurs4, kurs4)
     )
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     full_name = models.CharField(_("full name"), max_length=150, blank=True, null=True)
