@@ -111,6 +111,10 @@ class ApplicationUpdateView(generics.CreateAPIView):
             student.faculty = application.faculty
             student.full_name = application.full_name
             student.type = application.type
+            student.contract_amount1 = application.type.contract_amount1
+            student.contract_amount2 = application.type.contract_amount2
+            student.first_quarter = application.type.first_quarter
+            student.second_quarter = application.type.second_quarter
             student.diploma_picture = application.diploma_picture
             student.diploma_seria = application.diploma_seria
             student.ielts_picture = application.ielts_picture
@@ -629,6 +633,10 @@ class ApplicationListUpdateView(generics.CreateAPIView):
                     student.faculty = application.faculty
                     student.full_name = application.full_name
                     student.type = application.type
+                    student.contract_amount1 = application.type.contract_amount1
+                    student.contract_amount2 = application.type.contract_amount2
+                    student.first_quarter = application.type.first_quarter
+                    student.second_quarter = application.type.second_quarter
                     student.diploma_picture = application.diploma_picture
                     student.diploma_seria = application.diploma_seria
                     student.ielts_picture = application.ielts_picture
