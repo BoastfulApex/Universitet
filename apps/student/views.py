@@ -133,7 +133,10 @@ class TestGenerate(generics.ListCreateAPIView):
 
 
 class GetTestData(generics.ListAPIView):
+    serializer_class = TestSerializer
 
+    def get_queryset(self):
+        return []
 
     def list(self, request, *args, **kwargs):
         guid = self.request.GET.get('guid')
