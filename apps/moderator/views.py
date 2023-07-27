@@ -453,7 +453,6 @@ class DashboardView(generics.ListAPIView):
             student_pays = [pay.summa for pay in StudentFinance.objects.filter(student=student).all()]
             if sum(student_pays) < student.type.contract_amount1:
                 not_pay1 += student.type.contract_amount1 - sum(student_pays)
-                not_pay2 += student.type.contract_amount2
                 not_payed_1 += 1
                 not_payed_2 += 1
             else:
@@ -463,7 +462,6 @@ class DashboardView(generics.ListAPIView):
                     payed_2 += 1
                     pay2 += student.type.contract_amount2
                 else:
-                    print(sum(student_pays))
                     p = sum(student_pays) - student.type.contract_amount2 - student.type.contract_amount2
                     not_pay2 += p
                     not_payed_2 += 1
@@ -491,6 +489,34 @@ class DashboardView(generics.ListAPIView):
                 'not_pay2': not_pay2,
                 'all_summ_finance': sum(all_summ_finance),
                 'all_need_summa': all_need_summa - sum(pays)
+            }
+        )
+
+
+class PayedStudent(generics.ListAPIView):
+    permission_classes = [Analytica]
+
+    def get_queryset(self):
+        return []
+
+    def list(self, request, *args, **kwargs):
+        students = Student.objects.all()
+        pay1 = []
+        pay2 = []
+
+        for student in students:
+            student_pays = [pay.summa for pay in StudentFinance.objects.filter(student=student).all()]
+            if sum(student_pays) >= student.contract_amount1:
+                pay1.append(serializers.serialize('python', [student])[0])
+            elif sum(student_pays) >= student.contract_amount2 + student.contract_amount2:
+                pass
+            else:
+                pay2.append(serializers.serialize('python', [student])[0])
+
+        return Response(
+            {
+                "pay_2": pay2,
+                "pay_1": pay1,
             }
         )
 
