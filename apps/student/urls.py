@@ -9,6 +9,7 @@ urlpatterns = [
     path('user_registration/', UserRegistrationPostView.as_view(), name='user-registration'),
     path('user_transfer/', UserTransferPostView.as_view(), name='user-transfer'),
     path('test/generate/', TestGenerate.as_view(), name='user-test-generate'),
+    path('test/get_data/', GetTestData.as_view(), name='user-test-data'),
     path('test/finish/', TestEnd.as_view(), name='user-finish'),
     path('test/answer/<int:pk>', StudentTestAnswer.as_view(), name='user-test-answer'),
 

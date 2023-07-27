@@ -131,6 +131,54 @@ class TestGenerate(generics.ListCreateAPIView):
             pass
         return Response(test_d)
 
+
+class GetTestData(generics.ListAPIView):
+
+
+    def list(self, request, *args, **kwargs):
+        guid = self.request.GET.get('guid')
+        data = []
+        test_d = []
+        try:
+            test = Test.objects.get(guid=guid)
+            subjects = TestSubject.objects.filter(test=test)
+            for subject in subjects:
+                questions_data = []
+                test_questions = TestQuestion.objects.filter(subject=subject).all()
+                for test_question in test_questions:
+                    answers_data = []
+                    answers = Answer.objects.filter(question=test_question.question).order_by('?').all()
+                    for answer in answers:
+                        answer_d = {
+                            'id': answer.id,
+                            'answer': answer.answer,
+                            'answer_image': answer.image if answer.image else None
+                        }
+                        answers_data.append(answer_d)
+                    question = {
+                        'id': test_question.id,
+                        'question': test_question.question.question,
+                        'question_image': test_question.question.image if test_question.question.image else None,
+                        'student_answer': test_question.studenT_answer.id if test_question.student_answer else None,
+                        'answers': answers_data
+                    }
+                    questions_data.append(question)
+                subjects_data = {
+                    'id': subject.id,
+                    'name': subject.subject.site_name,
+                    'questions': questions_data
+                }
+                data.append(subjects_data)
+            test_d = {
+                'id': test.id,
+                'guid': test.guid,
+                'ball': 0,
+                'data': data
+            }
+        except:
+            pass
+        return Response(test_d)
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         application = request.data['application']
