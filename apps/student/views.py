@@ -136,14 +136,17 @@ class GetTestData(generics.ListAPIView):
     serializer_class = TestSerializer
 
     def get_queryset(self):
-        return []
+        test = []
+        guid = self.request.GET.get('guid')
+        if guid:
+            test = Test.objects.get(guid=guid)
+        return test
 
     def list(self, request, *args, **kwargs):
-        guid = self.request.GET.get('guid')
         data = []
         test_d = []
         # try:
-        test = Test.objects.get(guid=guid)
+        test = self.get_queryset()
         subjects = TestSubject.objects.filter(test=test)
         for subject in subjects:
             questions_data = []
