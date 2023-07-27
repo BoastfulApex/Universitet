@@ -370,7 +370,7 @@ class AnswerView(generics.ListAPIView):
 class ModeratorView(generics.ListCreateAPIView):
     queryset = Moderator.objects.all()
     serializer_class = ModeratorSerializer
-    # permission_classes = [SuperAdmin]
+    permission_classes = [SuperAdmin]
 
 
 class ModeratorDetailView(generics.RetrieveUpdateDestroyAPIView):
