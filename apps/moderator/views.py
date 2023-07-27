@@ -717,14 +717,19 @@ class DeleteFor(generics.ListAPIView):
                 i.delete()
 
 
-class FinanceListView(generics.CreateAPIView):
-    queryset = StudentFinance.objects.all()
+class FinanceListView(generics.ListAPIView):
     serializer_class = FinanceSerializer
     permission_classes = [Finance]
 
-    def post(self, request, *args, **kwargs):
-        student_id = request.data['student_id']
-        finances = StudentFinance.objects.filter(student__user_finance_id=student_id).all()
+    def get_queryset(self):
+        queryset = StudentFinance.objects.all()
+        student_id = self.request.GET.get('student_id')
+        if student_id:
+            queryset = queryset.filter(student__user_finance_id=student_id)
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        finances = self.get_queryset()
         serializer = self.get_serializer(finances, many=True)
         return Response(serializer.data)
 

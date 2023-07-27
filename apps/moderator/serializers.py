@@ -167,3 +167,10 @@ class FinanceSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class FinancePostSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = StudentFinance
+        fields = '__all__'
+
+
