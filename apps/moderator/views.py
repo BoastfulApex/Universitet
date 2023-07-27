@@ -652,7 +652,7 @@ class ApplicationListUpdateView(generics.CreateAPIView):
                     application.description = request.data['description']
                 application.save()
                 if application.application_type != "Konsultatsiya" and application.status == "Tasdiqlandi":
-                    student, created = Student.objects.get_or_create(user=application.user)
+                    student, created = Student.objects.get_or_create(phone=application.user.phone)
                     student.study_type = application.study_type
                     student.passport_seria = application.passport_seria
                     student.faculty = application.faculty
