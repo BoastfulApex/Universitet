@@ -410,14 +410,13 @@ class FinanceFileView(generics.CreateAPIView):
         df = pd.read_excel(file_path)
 
         for i in df.index:
-            str_agreement = df['Назначение платежа'][i]
             try:
-                agreement_id = str(str_agreement).split('№0/9 ')[1][:5]
+                agreement_id = df['Student'][i]
                 student = Student.objects.filter(user_finance_id=agreement_id).first()
                 if student:
                     pay = StudentFinence.objects.create(
                         student=student,
-                        summa=int(df['Оборот керидит'][i])
+                        summa=int(df['Summa'][i])
                     )
                     pay.save()
             except:
