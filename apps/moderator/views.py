@@ -715,3 +715,22 @@ class DeleteFor(generics.ListAPIView):
         for i in applications:
             if i.id != 32:
                 i.delete()
+
+
+class FinanceListView(generics.CreateAPIView):
+    queryset = StudentFinance.objects.all()
+    serializer_class = FinanceSerializer
+    permission_classes = [Finance]
+
+    def post(self, request, *args, **kwargs):
+        student_id = request.data['student_id']
+        finances = StudentFinance.objects.filter(student__user_finance_id=student_id).all()
+        serializer = self.get_serializer(finances, many=True)
+        return Response(serializer.data)
+
+
+class FinanceDetailView(generics.RetrieveUpdateAPIView):
+    queryset = StudentFinance.objects.all()
+    serializer_class = FinanceSerializer
+    permission_classes = [Finance]
+

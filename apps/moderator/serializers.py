@@ -159,3 +159,11 @@ class ApplicationListUpdateSerializer(serializers.Serializer):
     objects = serializers.ListField(child=serializers.IntegerField())
     description = serializers.CharField(max_length=5000)
 
+
+class FinanceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = StudentFinance
+        fields = '__all__'
+
+

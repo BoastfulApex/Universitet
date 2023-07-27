@@ -28,6 +28,8 @@ urlpatterns = [
     path('send_message/', SendMessageView.as_view(), name='send_message_groups'),
 
     path('finance_file/', FinanceFileView.as_view(), name='finance_file'),
+    path('student_finance/', FinanceListView.as_view(), name='finance_filter'),
+    path('student_finance/<int:pk>', FinanceDetailView.as_view(), name='finance_detail'),
     path('dashboard/', DashboardView.as_view(), name='dashboard'),
     path('check_moderator/', ModeratorPermissions.as_view(), name='check_moderator'),
     path('not_pay_students/', NotPayedStudent.as_view(), name='not_pay_students'),
