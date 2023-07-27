@@ -195,8 +195,6 @@ class TestGenerate(generics.ListCreateAPIView):
             return Response(test_d)
 
 
-
-
 class GetTestData(generics.ListAPIView):
     serializer_class = TestSerializer
 
@@ -224,7 +222,8 @@ class GetTestData(generics.ListAPIView):
                 'id': test.id,
                 'guid': test.guid,
                 'ball': 0,
-                'data': data
+                'data': data,
+                'interval': test.application.type.test_minute
             }
         except:
             pass
