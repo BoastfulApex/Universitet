@@ -453,7 +453,7 @@ class DashboardView(generics.ListAPIView):
         for student in students:
             student_pays = [pay.summa for pay in StudentFinance.objects.filter(student=student).all()]
             pay_all = student.type.contract_amount1 + student.type.contract_amount2
-            if student < pay_all * 2:
+            if sum(student_pays) < pay_all * 2 and student.group.course != '1-Kurs':
                 last_year_not_payed.append(student)
             if sum(student_pays) < student.type.contract_amount1:
                 not_pay1 += student.type.contract_amount1 - sum(student_pays)
@@ -566,10 +566,9 @@ class LastYearNotPayedStudent(generics.ListAPIView):
         not_pay = []
 
         for student in students:
-
             student_pays = [pay.summa for pay in StudentFinance.objects.filter(student=student).all()]
             pay_all = student.type.contract_amount1 + student.type.contract_amount2
-            if student < pay_all * 2:
+            if sum(student_pays) < pay_all * 2 and student.group.course != '1-Kurs':
                 not_pay.append(serializers.serialize('python', [student])[0])
 
         return Response(
