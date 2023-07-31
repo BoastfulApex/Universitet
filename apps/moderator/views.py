@@ -30,7 +30,7 @@ def send_sms(phone, text):
 
 class ApplicationView(generics.ListCreateAPIView):
     serializer_class = ApplicationSerializer
-    permission_classes = [WorkingApplicant]
+    # permission_classes = [WorkingApplicant]
     pagination_class = ApplicationPagination
 
     def get_queryset(self):
