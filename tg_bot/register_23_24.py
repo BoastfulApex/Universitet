@@ -226,7 +226,7 @@ class Register2324:
                     )
                     if question:
                         test_question = TestQuestion.objects.create(
-                            subject=subject, question=question
+                            subject=test_subject, question=question
                         )
                     else:
                         break
