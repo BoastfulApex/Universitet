@@ -235,7 +235,7 @@ class Register2324:
                 user.save()
 
             BotApplication.objects.create(
-                user=dbUser, application=application, test=test
+                user=user, application=application, test=test
             )
 
             return REGISTER_2324_TEST_TIME
