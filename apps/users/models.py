@@ -34,7 +34,9 @@ class User(AbstractUser):
     username = None
 
     phone = models.CharField(max_length=15, null=True, unique=True, validators=[_validate_phone])
+
     telegram_id = models.CharField(max_length=100, null=True, blank=True)
+    
     otp = models.CharField(max_length=10, null=True, blank=True)
 
     super_admin = models.BooleanField(default=False)
