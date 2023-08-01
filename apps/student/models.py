@@ -106,7 +106,10 @@ class Application(models.Model):
         (kurs3, kurs3),
         (kurs4, kurs4)
     )
+
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+
+    
     full_name = models.CharField(_("full name"), max_length=150, blank=True, null=True)
     phone = models.CharField(max_length=15, null=True, validators=[_validate_phone])
 
