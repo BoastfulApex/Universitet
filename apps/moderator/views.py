@@ -30,7 +30,7 @@ def send_sms(phone, text):
 
 class ApplicationView(generics.ListCreateAPIView):
     serializer_class = ApplicationSerializer
-    permission_classes = [WorkingApplicant]
+    # permission_classes = [WorkingApplicant]
     pagination_class = ApplicationPagination
 
     def get_queryset(self):
@@ -443,6 +443,7 @@ class DashboardView(generics.ListAPIView):
         pays = [pay['summa'] for pay in all_pays]
         payed_1 = 0
         not_pay1 = 0
+        last_year_not_payed = []
         not_pay2 = 0
         pay1 = 0
         pay2 = 0
@@ -451,6 +452,9 @@ class DashboardView(generics.ListAPIView):
         not_payed_2 = 0
         for student in students:
             student_pays = [pay.summa for pay in StudentFinance.objects.filter(student=student).all()]
+            pay_all = student.type.contract_amount1 + student.type.contract_amount2
+            if sum(student_pays) < pay_all * 2 and student.group.course != '1-Kurs':
+                last_year_not_payed.append(student)
             if sum(student_pays) < student.type.contract_amount1:
                 not_pay1 += student.type.contract_amount1 - sum(student_pays)
                 not_payed_1 += 1
@@ -487,6 +491,7 @@ class DashboardView(generics.ListAPIView):
                 'pay2': pay2,
                 'not_pay1': not_pay1,
                 'not_pay2': not_pay2,
+                'last_year_not_payed': len(last_year_not_payed),
                 'all_summ_finance': sum(all_summ_finance),
                 'all_need_summa': all_need_summa - sum(pays)
             }
@@ -546,6 +551,29 @@ class NotPayedStudent(generics.ListAPIView):
             {
                 "not_pay_2": not_pay2,
                 "not_pay_1": not_pay1,
+            }
+        )
+
+
+class LastYearNotPayedStudent(generics.ListAPIView):
+    permission_classes = [Analytica]
+
+    def get_queryset(self):
+        return []
+
+    def list(self, request, *args, **kwargs):
+        students = Student.objects.all()
+        not_pay = []
+
+        for student in students:
+            student_pays = [pay.summa for pay in StudentFinance.objects.filter(student=student).all()]
+            pay_all = student.type.contract_amount1 + student.type.contract_amount2
+            if sum(student_pays) < pay_all * 2 and student.group.course != '1-Kurs':
+                not_pay.append(serializers.serialize('python', [student])[0])
+
+        return Response(
+            {
+                "not_pay": not_pay,
             }
         )
 
